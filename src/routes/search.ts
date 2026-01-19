@@ -37,10 +37,25 @@ searchRouter.post('/', async (req: Request, res: Response) => {
       return;
     }
 
+    // Normalize limit to number (could be string "10" or number 10)
+    const parsedLimit = typeof limit === 'string' ? parseInt(limit, 10) || 10 : (limit || 10);
+    
+    // Normalize filters (could be string or object)
+    const parsedFilters = typeof filters === 'string' 
+      ? (filters.length > 0 ? JSON.parse(filters) : undefined)
+      : filters;
+
     // If specific types requested, search by types; otherwise search all
-    const entityTypes: EntityType[] = types && types.length > 0
-      ? types.filter((t: string) => ALL_ENTITY_TYPES.includes(t as EntityType))
-      : [];
+    // Handle types as string, array, or undefined
+    let typesArray: string[] = [];
+    if (Array.isArray(types)) {
+      typesArray = types;
+    } else if (typeof types === 'string' && types.length > 0) {
+      typesArray = types.split(',').map((t: string) => t.trim());
+    }
+    
+    const entityTypes: EntityType[] = typesArray
+      .filter((t) => ALL_ENTITY_TYPES.includes(t as EntityType)) as EntityType[];
 
     let results: SearchResultItem[];
 
@@ -48,8 +63,8 @@ searchRouter.post('/', async (req: Request, res: Response) => {
       // Search specific types
       const byTypeResults = await vectorStore.searchByTypes(entityTypes, {
         query,
-        filters,
-        limit,
+        filters: parsedFilters,
+        limit: parsedLimit,
         searchType: search_type,
       });
 
@@ -62,8 +77,8 @@ searchRouter.post('/', async (req: Request, res: Response) => {
       // Search ALL entities in single query (no type filter)
       const allResults = await vectorStore.searchAllTypes({
         query,
-        filters,
-        limit,
+        filters: parsedFilters,
+        limit: parsedLimit,
         searchType: search_type,
       });
       results = allResults.results as SearchResultItem[];
@@ -83,7 +98,7 @@ searchRouter.post('/', async (req: Request, res: Response) => {
       query,
       types: entityTypes.length > 0 ? entityTypes : 'all',
       total: results.length,
-      results: results.slice(0, limit),
+      results: results.slice(0, parsedLimit),
     });
   } catch (error) {
     console.error('Error in unified search:', error);

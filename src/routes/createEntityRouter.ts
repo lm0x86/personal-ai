@@ -19,10 +19,23 @@ export function createEntityRouter<T extends BaseEntity>(options: RouterOptions)
     try {
       const { q, limit = '10', ...filters } = req.query;
       
+      // Parse limit safely (could be string or number)
+      const parsedLimit = typeof limit === 'string' 
+        ? parseInt(limit, 10) || 10 
+        : (typeof limit === 'number' ? limit : 10);
+      
+      // Filter out empty string values from filters
+      const cleanFilters: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(filters)) {
+        if (value !== '' && value !== undefined && value !== null) {
+          cleanFilters[key] = value;
+        }
+      }
+      
       const result = await vectorStore.search<T>(entityType, {
         query: q as string,
-        filters: Object.keys(filters).length > 0 ? filters : undefined,
-        limit: parseInt(limit as string, 10),
+        filters: Object.keys(cleanFilters).length > 0 ? cleanFilters : undefined,
+        limit: parsedLimit,
       });
 
       res.json(result);
