@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { createEntityRouter } from './createEntityRouter.js';
 import { searchRouter } from './search.js';
+import { entitiesRouter } from './entities.js';
 import { ID_PREFIX } from '../utils/id.js';
 import { Task, Event, Reminder, Person, Place, Document, Memory, Project } from '../types/entities.js';
 
@@ -68,6 +69,9 @@ router.use('/projects', createEntityRouter<Project>({
 
 // Unified search
 router.use('/search', searchRouter);
+
+// Unified entity operations (get by ID, delete by ID)
+router.use('/entities', entitiesRouter);
 
 export { router };
 
