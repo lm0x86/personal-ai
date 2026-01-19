@@ -95,18 +95,6 @@ export type EntityType =
   | 'memory' 
   | 'project';
 
-// Index names for vector store
-export const INDEX_NAMES: Record<EntityType, string> = {
-  task: 'tasks',
-  event: 'events',
-  reminder: 'reminders',
-  person: 'people',
-  place: 'places',
-  document: 'documents',
-  memory: 'memories',
-  project: 'projects',
-};
-
 // Union type for any entity
 export type Entity = Task | Event | Reminder | Person | Place | Document | Memory | Project;
 

@@ -15,9 +15,9 @@ const ALL_ENTITY_TYPES: EntityType[] = [
   'project',
 ];
 
-// Extended type that includes search score
+// Extended type that includes search score and entity_type
 interface SearchResultItem extends BaseEntity {
-  _type: EntityType;
+  entity_type?: EntityType;
   _score?: number;
 }
 
@@ -37,30 +37,40 @@ searchRouter.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    // Determine which entity types to search
+    // If specific types requested, search by types; otherwise search all
     const entityTypes: EntityType[] = types && types.length > 0
       ? types.filter((t: string) => ALL_ENTITY_TYPES.includes(t as EntityType))
-      : ALL_ENTITY_TYPES;
+      : [];
 
-    // Search across all requested types
-    const results = await vectorStore.searchAll(entityTypes, {
-      query,
-      filters,
-      limit,
-      type: search_type,
-    });
+    let results: SearchResultItem[];
 
-    // Flatten results with type information
-    const flatResults: SearchResultItem[] = entityTypes.flatMap((entityType) => {
-      const typeResults = results[entityType]?.results || [];
-      return typeResults.map((item) => ({
-        ...item,
-        _type: entityType,
-      } as SearchResultItem));
-    });
+    if (entityTypes.length > 0) {
+      // Search specific types
+      const byTypeResults = await vectorStore.searchByTypes(entityTypes, {
+        query,
+        filters,
+        limit,
+        searchType: search_type,
+      });
+
+      // Flatten results
+      results = entityTypes.flatMap((entityType) => {
+        const typeResults = byTypeResults[entityType]?.results || [];
+        return typeResults as SearchResultItem[];
+      });
+    } else {
+      // Search ALL entities in single query (no type filter)
+      const allResults = await vectorStore.searchAllTypes({
+        query,
+        filters,
+        limit,
+        searchType: search_type,
+      });
+      results = allResults.results as SearchResultItem[];
+    }
 
     // Sort by relevance score if available, otherwise by updated_at
-    flatResults.sort((a, b) => {
+    results.sort((a, b) => {
       if (a._score !== undefined && b._score !== undefined) {
         return b._score - a._score;
       }
@@ -71,10 +81,9 @@ searchRouter.post('/', async (req: Request, res: Response) => {
 
     res.json({
       query,
-      types: entityTypes,
-      total: flatResults.length,
-      results: flatResults.slice(0, limit),
-      by_type: results,
+      types: entityTypes.length > 0 ? entityTypes : 'all',
+      total: results.length,
+      results: results.slice(0, limit),
     });
   } catch (error) {
     console.error('Error in unified search:', error);
@@ -92,30 +101,40 @@ searchRouter.get('/', async (req: Request, res: Response) => {
       return;
     }
 
+    const parsedLimit = parseInt(limit as string, 10);
+
     // Parse types if provided
     const entityTypes: EntityType[] = types
       ? (types as string).split(',').filter((t) => ALL_ENTITY_TYPES.includes(t as EntityType)) as EntityType[]
-      : ALL_ENTITY_TYPES;
+      : [];
 
-    const results = await vectorStore.searchAll(entityTypes, {
-      query: q as string,
-      limit: parseInt(limit as string, 10),
-    });
+    let results: SearchResultItem[];
 
-    // Flatten results
-    const flatResults: SearchResultItem[] = entityTypes.flatMap((entityType) => {
-      const typeResults = results[entityType]?.results || [];
-      return typeResults.map((item) => ({
-        ...item,
-        _type: entityType,
-      } as SearchResultItem));
-    });
+    if (entityTypes.length > 0) {
+      // Search specific types
+      const byTypeResults = await vectorStore.searchByTypes(entityTypes, {
+        query: q as string,
+        limit: parsedLimit,
+      });
+
+      results = entityTypes.flatMap((entityType) => {
+        const typeResults = byTypeResults[entityType]?.results || [];
+        return typeResults as SearchResultItem[];
+      });
+    } else {
+      // Search all
+      const allResults = await vectorStore.searchAllTypes({
+        query: q as string,
+        limit: parsedLimit,
+      });
+      results = allResults.results as SearchResultItem[];
+    }
 
     res.json({
       query: q,
-      types: entityTypes,
-      total: flatResults.length,
-      results: flatResults.slice(0, parseInt(limit as string, 10)),
+      types: entityTypes.length > 0 ? entityTypes : 'all',
+      total: results.length,
+      results: results.slice(0, parsedLimit),
     });
   } catch (error) {
     console.error('Error in unified search:', error);

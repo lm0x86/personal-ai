@@ -9,7 +9,6 @@ export const config = {
     apiKey: process.env.VECTOR_STORE_API_KEY || '',
   },
   
-  // Index prefix to namespace all collections
-  indexPrefix: process.env.INDEX_PREFIX || 'assistant_',
+  // Single index name for all entities
+  indexName: process.env.INDEX_NAME || 'assistant',
 };
-

@@ -1,11 +1,11 @@
 import { config } from '../config.js';
-import { BaseEntity, EntityType, INDEX_NAMES } from '../types/entities.js';
+import { BaseEntity, EntityType } from '../types/entities.js';
 
 interface SearchOptions {
   query?: string;
   filters?: Record<string, unknown>;
   limit?: number;
-  type?: 'hybrid' | 'openai_dense' | 'bge_m3_dense' | 'bge_m3_sparse';
+  searchType?: 'hybrid' | 'openai_dense' | 'bge_m3_dense' | 'bge_m3_sparse';
 }
 
 interface SearchResult<T> {
@@ -26,16 +26,12 @@ interface ApiStatsResponse {
 class VectorStoreService {
   private baseUrl: string;
   private apiKey: string;
-  private indexPrefix: string;
+  private indexName: string;
 
   constructor() {
     this.baseUrl = config.vectorStore.baseUrl;
     this.apiKey = config.vectorStore.apiKey;
-    this.indexPrefix = config.indexPrefix;
-  }
-
-  private getIndexName(entityType: EntityType): string {
-    return `${this.indexPrefix}${INDEX_NAMES[entityType]}`;
+    this.indexName = config.indexName;
   }
 
   private getHeaders(): Record<string, string> {
@@ -60,15 +56,15 @@ class VectorStoreService {
     entityType: EntityType,
     entity: T
   ): Promise<T> {
-    const index = this.getIndexName(entityType);
     const now = new Date().toISOString();
     
     const payload = {
       ...entity,
-      index,
+      index: this.indexName,
       id: entity.id,
       title: entity.title,
       description: entity.description || '',
+      entity_type: entityType,  // Store type in the entity
       updated_at: now,
       created_at: entity.created_at || now,
     };
@@ -92,10 +88,8 @@ class VectorStoreService {
     entityType: EntityType,
     id: string
   ): Promise<T | null> {
-    const index = this.getIndexName(entityType);
-    
     const response = await fetch(
-      `${this.baseUrl}/product?index=${encodeURIComponent(index)}&id=${encodeURIComponent(id)}`,
+      `${this.baseUrl}/product?index=${encodeURIComponent(this.indexName)}&id=${encodeURIComponent(id)}`,
       {
         method: 'GET',
         headers: this.getHeaders(),
@@ -121,11 +115,10 @@ class VectorStoreService {
   ): Promise<T[]> {
     if (ids.length === 0) return [];
     
-    const index = this.getIndexName(entityType);
     const idsParam = ids.join(',');
     
     const response = await fetch(
-      `${this.baseUrl}/product?index=${encodeURIComponent(index)}&id=${encodeURIComponent(idsParam)}`,
+      `${this.baseUrl}/product?index=${encodeURIComponent(this.indexName)}&id=${encodeURIComponent(idsParam)}`,
       {
         method: 'GET',
         headers: this.getHeaders(),
@@ -143,12 +136,10 @@ class VectorStoreService {
 
   // Delete entity
   async delete(entityType: EntityType, ids: string[]): Promise<void> {
-    const index = this.getIndexName(entityType);
-    
     const response = await fetch(`${this.baseUrl}/product`, {
       method: 'DELETE',
       headers: this.getHeaders(),
-      body: JSON.stringify({ index, ids }),
+      body: JSON.stringify({ index: this.indexName, ids }),
     });
 
     if (!response.ok) {
@@ -157,22 +148,26 @@ class VectorStoreService {
     }
   }
 
-  // Search entities
+  // Search entities of a specific type
   async search<T extends BaseEntity>(
     entityType: EntityType,
     options: SearchOptions
   ): Promise<SearchResult<T>> {
-    const index = this.getIndexName(entityType);
+    // Merge entity_type filter with any provided filters
+    const filters = {
+      ...options.filters,
+      entity_type: entityType,
+    };
     
     const response = await fetch(`${this.baseUrl}/search`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({
-        index,
+        index: this.indexName,
         query: options.query,
-        filters: options.filters,
+        filters,
         limit: options.limit || 10,
-        type: options.type || 'hybrid',
+        type: options.searchType || 'hybrid',
       }),
     });
 
@@ -189,8 +184,37 @@ class VectorStoreService {
     };
   }
 
-  // Search across multiple entity types
-  async searchAll(
+  // Search all entities (no type filter)
+  async searchAllTypes(
+    options: SearchOptions
+  ): Promise<SearchResult<BaseEntity>> {
+    const response = await fetch(`${this.baseUrl}/search`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        index: this.indexName,
+        query: options.query,
+        filters: options.filters,
+        limit: options.limit || 10,
+        type: options.searchType || 'hybrid',
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to search: ${error}`);
+    }
+
+    const data = await response.json() as ApiSearchResponse;
+    const results = (data.results || data || []) as BaseEntity[];
+    return {
+      results,
+      total: data.total || results.length,
+    };
+  }
+
+  // Search across specific entity types (runs separate filtered searches)
+  async searchByTypes(
     entityTypes: EntityType[],
     options: SearchOptions
   ): Promise<Record<EntityType, SearchResult<BaseEntity>>> {
@@ -207,10 +231,8 @@ class VectorStoreService {
   }
 
   // Get index statistics
-  async getStats(entityType: EntityType): Promise<{ total: number; hasData: boolean }> {
-    const index = this.getIndexName(entityType);
-    
-    const response = await fetch(`${this.baseUrl}/stats/${encodeURIComponent(index)}`, {
+  async getStats(): Promise<{ total: number; hasData: boolean }> {
+    const response = await fetch(`${this.baseUrl}/stats/${encodeURIComponent(this.indexName)}`, {
       method: 'GET',
       headers: this.getHeaders(),
     });

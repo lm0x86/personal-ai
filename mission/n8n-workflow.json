@@ -1,0 +1,2095 @@
+{
+  "name": "Personal AI Assistant API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-list",
+      "name": "Webhook Tasks List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "tasks-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/tasks?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}{{ $json.body.priority ? '&priority=' + $json.body.priority : '' }}",
+        "options": {}
+      },
+      "id": "http-tasks-list",
+      "name": "HTTP Tasks List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-tasks-list",
+      "name": "Respond Tasks List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-get",
+      "name": "Webhook Tasks Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 200],
+      "webhookId": "tasks-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-tasks-get",
+      "name": "HTTP Tasks Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-tasks-get",
+      "name": "Respond Tasks Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-create",
+      "name": "Webhook Tasks Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 400],
+      "webhookId": "tasks-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/tasks",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-create",
+      "name": "HTTP Tasks Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-tasks-create",
+      "name": "Respond Tasks Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-update",
+      "name": "Webhook Tasks Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 600],
+      "webhookId": "tasks-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-update",
+      "name": "HTTP Tasks Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-tasks-update",
+      "name": "Respond Tasks Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-patch",
+      "name": "Webhook Tasks Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 800],
+      "webhookId": "tasks-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-patch",
+      "name": "HTTP Tasks Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-tasks-patch",
+      "name": "Respond Tasks Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-tasks-delete",
+      "name": "Webhook Tasks Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 1000],
+      "webhookId": "tasks-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-tasks-delete",
+      "name": "HTTP Tasks Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-tasks-delete",
+      "name": "Respond Tasks Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-list",
+      "name": "Webhook Events List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 0],
+      "webhookId": "events-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/events?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}",
+        "options": {}
+      },
+      "id": "http-events-list",
+      "name": "HTTP Events List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-events-list",
+      "name": "Respond Events List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-get",
+      "name": "Webhook Events Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 200],
+      "webhookId": "events-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-events-get",
+      "name": "HTTP Events Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-events-get",
+      "name": "Respond Events Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-create",
+      "name": "Webhook Events Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 400],
+      "webhookId": "events-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/events",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-events-create",
+      "name": "HTTP Events Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-events-create",
+      "name": "Respond Events Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-update",
+      "name": "Webhook Events Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 600],
+      "webhookId": "events-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-events-update",
+      "name": "HTTP Events Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-events-update",
+      "name": "Respond Events Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-patch",
+      "name": "Webhook Events Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 800],
+      "webhookId": "events-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-events-patch",
+      "name": "HTTP Events Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-events-patch",
+      "name": "Respond Events Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "events/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-events-delete",
+      "name": "Webhook Events Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [600, 1000],
+      "webhookId": "events-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-events-delete",
+      "name": "HTTP Events Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-events-delete",
+      "name": "Respond Events Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1040, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-list",
+      "name": "Webhook Reminders List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 0],
+      "webhookId": "reminders-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/reminders?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}",
+        "options": {}
+      },
+      "id": "http-reminders-list",
+      "name": "HTTP Reminders List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-reminders-list",
+      "name": "Respond Reminders List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-get",
+      "name": "Webhook Reminders Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 200],
+      "webhookId": "reminders-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-reminders-get",
+      "name": "HTTP Reminders Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-reminders-get",
+      "name": "Respond Reminders Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-create",
+      "name": "Webhook Reminders Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 400],
+      "webhookId": "reminders-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/reminders",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-reminders-create",
+      "name": "HTTP Reminders Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-reminders-create",
+      "name": "Respond Reminders Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-update",
+      "name": "Webhook Reminders Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 600],
+      "webhookId": "reminders-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-reminders-update",
+      "name": "HTTP Reminders Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-reminders-update",
+      "name": "Respond Reminders Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-patch",
+      "name": "Webhook Reminders Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 800],
+      "webhookId": "reminders-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-reminders-patch",
+      "name": "HTTP Reminders Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-reminders-patch",
+      "name": "Respond Reminders Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reminders/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-reminders-delete",
+      "name": "Webhook Reminders Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1200, 1000],
+      "webhookId": "reminders-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-reminders-delete",
+      "name": "HTTP Reminders Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1420, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-reminders-delete",
+      "name": "Respond Reminders Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1640, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-list",
+      "name": "Webhook People List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 0],
+      "webhookId": "people-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/people?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.relationship ? '&relationship=' + $json.body.relationship : '' }}",
+        "options": {}
+      },
+      "id": "http-people-list",
+      "name": "HTTP People List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-people-list",
+      "name": "Respond People List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-get",
+      "name": "Webhook People Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 200],
+      "webhookId": "people-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-people-get",
+      "name": "HTTP People Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-people-get",
+      "name": "Respond People Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-create",
+      "name": "Webhook People Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 400],
+      "webhookId": "people-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/people",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-people-create",
+      "name": "HTTP People Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-people-create",
+      "name": "Respond People Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-update",
+      "name": "Webhook People Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 600],
+      "webhookId": "people-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-people-update",
+      "name": "HTTP People Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-people-update",
+      "name": "Respond People Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-patch",
+      "name": "Webhook People Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 800],
+      "webhookId": "people-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-people-patch",
+      "name": "HTTP People Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-people-patch",
+      "name": "Respond People Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-people-delete",
+      "name": "Webhook People Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [1800, 1000],
+      "webhookId": "people-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-people-delete",
+      "name": "HTTP People Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2020, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-people-delete",
+      "name": "Respond People Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2240, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-list",
+      "name": "Webhook Places List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 0],
+      "webhookId": "places-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/places?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.type ? '&type=' + $json.body.type : '' }}",
+        "options": {}
+      },
+      "id": "http-places-list",
+      "name": "HTTP Places List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-places-list",
+      "name": "Respond Places List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-get",
+      "name": "Webhook Places Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 200],
+      "webhookId": "places-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-places-get",
+      "name": "HTTP Places Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-places-get",
+      "name": "Respond Places Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-create",
+      "name": "Webhook Places Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 400],
+      "webhookId": "places-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/places",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-places-create",
+      "name": "HTTP Places Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-places-create",
+      "name": "Respond Places Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-update",
+      "name": "Webhook Places Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 600],
+      "webhookId": "places-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-places-update",
+      "name": "HTTP Places Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-places-update",
+      "name": "Respond Places Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-patch",
+      "name": "Webhook Places Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 800],
+      "webhookId": "places-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-places-patch",
+      "name": "HTTP Places Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-places-patch",
+      "name": "Respond Places Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "places/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-places-delete",
+      "name": "Webhook Places Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [2400, 1000],
+      "webhookId": "places-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-places-delete",
+      "name": "HTTP Places Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-places-delete",
+      "name": "Respond Places Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2840, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-list",
+      "name": "Webhook Documents List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 0],
+      "webhookId": "documents-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/documents?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}{{ $json.body.type ? '&type=' + $json.body.type : '' }}",
+        "options": {}
+      },
+      "id": "http-documents-list",
+      "name": "HTTP Documents List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-documents-list",
+      "name": "Respond Documents List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-get",
+      "name": "Webhook Documents Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 200],
+      "webhookId": "documents-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-documents-get",
+      "name": "HTTP Documents Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-documents-get",
+      "name": "Respond Documents Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-create",
+      "name": "Webhook Documents Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 400],
+      "webhookId": "documents-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/documents",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-documents-create",
+      "name": "HTTP Documents Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-documents-create",
+      "name": "Respond Documents Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-update",
+      "name": "Webhook Documents Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 600],
+      "webhookId": "documents-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-documents-update",
+      "name": "HTTP Documents Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-documents-update",
+      "name": "Respond Documents Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-patch",
+      "name": "Webhook Documents Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 800],
+      "webhookId": "documents-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-documents-patch",
+      "name": "HTTP Documents Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-documents-patch",
+      "name": "Respond Documents Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "documents/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-documents-delete",
+      "name": "Webhook Documents Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3000, 1000],
+      "webhookId": "documents-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-documents-delete",
+      "name": "HTTP Documents Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3220, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-documents-delete",
+      "name": "Respond Documents Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3440, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-list",
+      "name": "Webhook Memories List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 0],
+      "webhookId": "memories-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/memories?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.category ? '&category=' + $json.body.category : '' }}{{ $json.body.importance ? '&importance=' + $json.body.importance : '' }}",
+        "options": {}
+      },
+      "id": "http-memories-list",
+      "name": "HTTP Memories List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-memories-list",
+      "name": "Respond Memories List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-get",
+      "name": "Webhook Memories Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 200],
+      "webhookId": "memories-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-memories-get",
+      "name": "HTTP Memories Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-memories-get",
+      "name": "Respond Memories Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-create",
+      "name": "Webhook Memories Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 400],
+      "webhookId": "memories-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/memories",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-memories-create",
+      "name": "HTTP Memories Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-memories-create",
+      "name": "Respond Memories Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-update",
+      "name": "Webhook Memories Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 600],
+      "webhookId": "memories-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-memories-update",
+      "name": "HTTP Memories Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-memories-update",
+      "name": "Respond Memories Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-patch",
+      "name": "Webhook Memories Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 800],
+      "webhookId": "memories-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-memories-patch",
+      "name": "HTTP Memories Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-memories-patch",
+      "name": "Respond Memories Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memories/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-memories-delete",
+      "name": "Webhook Memories Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [3600, 1000],
+      "webhookId": "memories-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-memories-delete",
+      "name": "HTTP Memories Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3820, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-memories-delete",
+      "name": "Respond Memories Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4040, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-list",
+      "name": "Webhook Projects List",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 0],
+      "webhookId": "projects-list"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/projects?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}",
+        "options": {}
+      },
+      "id": "http-projects-list",
+      "name": "HTTP Projects List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-projects-list",
+      "name": "Respond Projects List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-get",
+      "name": "Webhook Projects Get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 200],
+      "webhookId": "projects-get"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-projects-get",
+      "name": "HTTP Projects Get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-projects-get",
+      "name": "Respond Projects Get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-create",
+      "name": "Webhook Projects Create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 400],
+      "webhookId": "projects-create"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/projects",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-projects-create",
+      "name": "HTTP Projects Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-projects-create",
+      "name": "Respond Projects Create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-update",
+      "name": "Webhook Projects Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 600],
+      "webhookId": "projects-update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-projects-update",
+      "name": "HTTP Projects Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-projects-update",
+      "name": "Respond Projects Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-patch",
+      "name": "Webhook Projects Patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 800],
+      "webhookId": "projects-patch"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-projects-patch",
+      "name": "HTTP Projects Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-projects-patch",
+      "name": "Respond Projects Patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "projects/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-projects-delete",
+      "name": "Webhook Projects Delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4200, 1000],
+      "webhookId": "projects-delete"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-projects-delete",
+      "name": "HTTP Projects Delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4420, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "respond-projects-delete",
+      "name": "Respond Projects Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4640, 1000]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "search",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-search",
+      "name": "Webhook Search",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4800, 0],
+      "webhookId": "search"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-search",
+      "name": "HTTP Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [5020, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-search",
+      "name": "Respond Search",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [5240, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "health",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-health",
+      "name": "Webhook Health",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [4800, 200],
+      "webhookId": "health"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://personal.optdevtech.com/health",
+        "options": {}
+      },
+      "id": "http-health",
+      "name": "HTTP Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [5020, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-health",
+      "name": "Respond Health",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [5240, 200]
+    }
+  ],
+  "connections": {
+    "Webhook Tasks List": { "main": [[{ "node": "HTTP Tasks List", "type": "main", "index": 0 }]] },
+    "HTTP Tasks List": { "main": [[{ "node": "Respond Tasks List", "type": "main", "index": 0 }]] },
+    "Webhook Tasks Get": { "main": [[{ "node": "HTTP Tasks Get", "type": "main", "index": 0 }]] },
+    "HTTP Tasks Get": { "main": [[{ "node": "Respond Tasks Get", "type": "main", "index": 0 }]] },
+    "Webhook Tasks Create": { "main": [[{ "node": "HTTP Tasks Create", "type": "main", "index": 0 }]] },
+    "HTTP Tasks Create": { "main": [[{ "node": "Respond Tasks Create", "type": "main", "index": 0 }]] },
+    "Webhook Tasks Update": { "main": [[{ "node": "HTTP Tasks Update", "type": "main", "index": 0 }]] },
+    "HTTP Tasks Update": { "main": [[{ "node": "Respond Tasks Update", "type": "main", "index": 0 }]] },
+    "Webhook Tasks Patch": { "main": [[{ "node": "HTTP Tasks Patch", "type": "main", "index": 0 }]] },
+    "HTTP Tasks Patch": { "main": [[{ "node": "Respond Tasks Patch", "type": "main", "index": 0 }]] },
+    "Webhook Tasks Delete": { "main": [[{ "node": "HTTP Tasks Delete", "type": "main", "index": 0 }]] },
+    "HTTP Tasks Delete": { "main": [[{ "node": "Respond Tasks Delete", "type": "main", "index": 0 }]] },
+    "Webhook Events List": { "main": [[{ "node": "HTTP Events List", "type": "main", "index": 0 }]] },
+    "HTTP Events List": { "main": [[{ "node": "Respond Events List", "type": "main", "index": 0 }]] },
+    "Webhook Events Get": { "main": [[{ "node": "HTTP Events Get", "type": "main", "index": 0 }]] },
+    "HTTP Events Get": { "main": [[{ "node": "Respond Events Get", "type": "main", "index": 0 }]] },
+    "Webhook Events Create": { "main": [[{ "node": "HTTP Events Create", "type": "main", "index": 0 }]] },
+    "HTTP Events Create": { "main": [[{ "node": "Respond Events Create", "type": "main", "index": 0 }]] },
+    "Webhook Events Update": { "main": [[{ "node": "HTTP Events Update", "type": "main", "index": 0 }]] },
+    "HTTP Events Update": { "main": [[{ "node": "Respond Events Update", "type": "main", "index": 0 }]] },
+    "Webhook Events Patch": { "main": [[{ "node": "HTTP Events Patch", "type": "main", "index": 0 }]] },
+    "HTTP Events Patch": { "main": [[{ "node": "Respond Events Patch", "type": "main", "index": 0 }]] },
+    "Webhook Events Delete": { "main": [[{ "node": "HTTP Events Delete", "type": "main", "index": 0 }]] },
+    "HTTP Events Delete": { "main": [[{ "node": "Respond Events Delete", "type": "main", "index": 0 }]] },
+    "Webhook Reminders List": { "main": [[{ "node": "HTTP Reminders List", "type": "main", "index": 0 }]] },
+    "HTTP Reminders List": { "main": [[{ "node": "Respond Reminders List", "type": "main", "index": 0 }]] },
+    "Webhook Reminders Get": { "main": [[{ "node": "HTTP Reminders Get", "type": "main", "index": 0 }]] },
+    "HTTP Reminders Get": { "main": [[{ "node": "Respond Reminders Get", "type": "main", "index": 0 }]] },
+    "Webhook Reminders Create": { "main": [[{ "node": "HTTP Reminders Create", "type": "main", "index": 0 }]] },
+    "HTTP Reminders Create": { "main": [[{ "node": "Respond Reminders Create", "type": "main", "index": 0 }]] },
+    "Webhook Reminders Update": { "main": [[{ "node": "HTTP Reminders Update", "type": "main", "index": 0 }]] },
+    "HTTP Reminders Update": { "main": [[{ "node": "Respond Reminders Update", "type": "main", "index": 0 }]] },
+    "Webhook Reminders Patch": { "main": [[{ "node": "HTTP Reminders Patch", "type": "main", "index": 0 }]] },
+    "HTTP Reminders Patch": { "main": [[{ "node": "Respond Reminders Patch", "type": "main", "index": 0 }]] },
+    "Webhook Reminders Delete": { "main": [[{ "node": "HTTP Reminders Delete", "type": "main", "index": 0 }]] },
+    "HTTP Reminders Delete": { "main": [[{ "node": "Respond Reminders Delete", "type": "main", "index": 0 }]] },
+    "Webhook People List": { "main": [[{ "node": "HTTP People List", "type": "main", "index": 0 }]] },
+    "HTTP People List": { "main": [[{ "node": "Respond People List", "type": "main", "index": 0 }]] },
+    "Webhook People Get": { "main": [[{ "node": "HTTP People Get", "type": "main", "index": 0 }]] },
+    "HTTP People Get": { "main": [[{ "node": "Respond People Get", "type": "main", "index": 0 }]] },
+    "Webhook People Create": { "main": [[{ "node": "HTTP People Create", "type": "main", "index": 0 }]] },
+    "HTTP People Create": { "main": [[{ "node": "Respond People Create", "type": "main", "index": 0 }]] },
+    "Webhook People Update": { "main": [[{ "node": "HTTP People Update", "type": "main", "index": 0 }]] },
+    "HTTP People Update": { "main": [[{ "node": "Respond People Update", "type": "main", "index": 0 }]] },
+    "Webhook People Patch": { "main": [[{ "node": "HTTP People Patch", "type": "main", "index": 0 }]] },
+    "HTTP People Patch": { "main": [[{ "node": "Respond People Patch", "type": "main", "index": 0 }]] },
+    "Webhook People Delete": { "main": [[{ "node": "HTTP People Delete", "type": "main", "index": 0 }]] },
+    "HTTP People Delete": { "main": [[{ "node": "Respond People Delete", "type": "main", "index": 0 }]] },
+    "Webhook Places List": { "main": [[{ "node": "HTTP Places List", "type": "main", "index": 0 }]] },
+    "HTTP Places List": { "main": [[{ "node": "Respond Places List", "type": "main", "index": 0 }]] },
+    "Webhook Places Get": { "main": [[{ "node": "HTTP Places Get", "type": "main", "index": 0 }]] },
+    "HTTP Places Get": { "main": [[{ "node": "Respond Places Get", "type": "main", "index": 0 }]] },
+    "Webhook Places Create": { "main": [[{ "node": "HTTP Places Create", "type": "main", "index": 0 }]] },
+    "HTTP Places Create": { "main": [[{ "node": "Respond Places Create", "type": "main", "index": 0 }]] },
+    "Webhook Places Update": { "main": [[{ "node": "HTTP Places Update", "type": "main", "index": 0 }]] },
+    "HTTP Places Update": { "main": [[{ "node": "Respond Places Update", "type": "main", "index": 0 }]] },
+    "Webhook Places Patch": { "main": [[{ "node": "HTTP Places Patch", "type": "main", "index": 0 }]] },
+    "HTTP Places Patch": { "main": [[{ "node": "Respond Places Patch", "type": "main", "index": 0 }]] },
+    "Webhook Places Delete": { "main": [[{ "node": "HTTP Places Delete", "type": "main", "index": 0 }]] },
+    "HTTP Places Delete": { "main": [[{ "node": "Respond Places Delete", "type": "main", "index": 0 }]] },
+    "Webhook Documents List": { "main": [[{ "node": "HTTP Documents List", "type": "main", "index": 0 }]] },
+    "HTTP Documents List": { "main": [[{ "node": "Respond Documents List", "type": "main", "index": 0 }]] },
+    "Webhook Documents Get": { "main": [[{ "node": "HTTP Documents Get", "type": "main", "index": 0 }]] },
+    "HTTP Documents Get": { "main": [[{ "node": "Respond Documents Get", "type": "main", "index": 0 }]] },
+    "Webhook Documents Create": { "main": [[{ "node": "HTTP Documents Create", "type": "main", "index": 0 }]] },
+    "HTTP Documents Create": { "main": [[{ "node": "Respond Documents Create", "type": "main", "index": 0 }]] },
+    "Webhook Documents Update": { "main": [[{ "node": "HTTP Documents Update", "type": "main", "index": 0 }]] },
+    "HTTP Documents Update": { "main": [[{ "node": "Respond Documents Update", "type": "main", "index": 0 }]] },
+    "Webhook Documents Patch": { "main": [[{ "node": "HTTP Documents Patch", "type": "main", "index": 0 }]] },
+    "HTTP Documents Patch": { "main": [[{ "node": "Respond Documents Patch", "type": "main", "index": 0 }]] },
+    "Webhook Documents Delete": { "main": [[{ "node": "HTTP Documents Delete", "type": "main", "index": 0 }]] },
+    "HTTP Documents Delete": { "main": [[{ "node": "Respond Documents Delete", "type": "main", "index": 0 }]] },
+    "Webhook Memories List": { "main": [[{ "node": "HTTP Memories List", "type": "main", "index": 0 }]] },
+    "HTTP Memories List": { "main": [[{ "node": "Respond Memories List", "type": "main", "index": 0 }]] },
+    "Webhook Memories Get": { "main": [[{ "node": "HTTP Memories Get", "type": "main", "index": 0 }]] },
+    "HTTP Memories Get": { "main": [[{ "node": "Respond Memories Get", "type": "main", "index": 0 }]] },
+    "Webhook Memories Create": { "main": [[{ "node": "HTTP Memories Create", "type": "main", "index": 0 }]] },
+    "HTTP Memories Create": { "main": [[{ "node": "Respond Memories Create", "type": "main", "index": 0 }]] },
+    "Webhook Memories Update": { "main": [[{ "node": "HTTP Memories Update", "type": "main", "index": 0 }]] },
+    "HTTP Memories Update": { "main": [[{ "node": "Respond Memories Update", "type": "main", "index": 0 }]] },
+    "Webhook Memories Patch": { "main": [[{ "node": "HTTP Memories Patch", "type": "main", "index": 0 }]] },
+    "HTTP Memories Patch": { "main": [[{ "node": "Respond Memories Patch", "type": "main", "index": 0 }]] },
+    "Webhook Memories Delete": { "main": [[{ "node": "HTTP Memories Delete", "type": "main", "index": 0 }]] },
+    "HTTP Memories Delete": { "main": [[{ "node": "Respond Memories Delete", "type": "main", "index": 0 }]] },
+    "Webhook Projects List": { "main": [[{ "node": "HTTP Projects List", "type": "main", "index": 0 }]] },
+    "HTTP Projects List": { "main": [[{ "node": "Respond Projects List", "type": "main", "index": 0 }]] },
+    "Webhook Projects Get": { "main": [[{ "node": "HTTP Projects Get", "type": "main", "index": 0 }]] },
+    "HTTP Projects Get": { "main": [[{ "node": "Respond Projects Get", "type": "main", "index": 0 }]] },
+    "Webhook Projects Create": { "main": [[{ "node": "HTTP Projects Create", "type": "main", "index": 0 }]] },
+    "HTTP Projects Create": { "main": [[{ "node": "Respond Projects Create", "type": "main", "index": 0 }]] },
+    "Webhook Projects Update": { "main": [[{ "node": "HTTP Projects Update", "type": "main", "index": 0 }]] },
+    "HTTP Projects Update": { "main": [[{ "node": "Respond Projects Update", "type": "main", "index": 0 }]] },
+    "Webhook Projects Patch": { "main": [[{ "node": "HTTP Projects Patch", "type": "main", "index": 0 }]] },
+    "HTTP Projects Patch": { "main": [[{ "node": "Respond Projects Patch", "type": "main", "index": 0 }]] },
+    "Webhook Projects Delete": { "main": [[{ "node": "HTTP Projects Delete", "type": "main", "index": 0 }]] },
+    "HTTP Projects Delete": { "main": [[{ "node": "Respond Projects Delete", "type": "main", "index": 0 }]] },
+    "Webhook Search": { "main": [[{ "node": "HTTP Search", "type": "main", "index": 0 }]] },
+    "HTTP Search": { "main": [[{ "node": "Respond Search", "type": "main", "index": 0 }]] },
+    "Webhook Health": { "main": [[{ "node": "HTTP Health", "type": "main", "index": 0 }]] },
+    "HTTP Health": { "main": [[{ "node": "Respond Health", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "personal-assistant-api"
+  },
+  "tags": []
+}
+
