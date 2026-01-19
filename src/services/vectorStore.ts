@@ -167,7 +167,7 @@ class VectorStoreService {
       headers: this.getHeaders(),
       body: JSON.stringify({
         index: this.indexName,
-        query,
+        search: query,  // Vector store API expects "search" not "query"
         filters,
         limit: options.limit || 10,
         type: options.searchType || 'hybrid',
@@ -199,7 +199,7 @@ class VectorStoreService {
       headers: this.getHeaders(),
       body: JSON.stringify({
         index: this.indexName,
-        query,
+        search: query,  // Vector store API expects "search" not "query"
         filters: options.filters,
         limit: options.limit || 10,
         type: options.searchType || 'hybrid',
