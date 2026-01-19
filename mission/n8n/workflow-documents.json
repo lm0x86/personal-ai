@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Documents",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-list", "name": "documents/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "documents-list",
+      "notes": "List and search documents. Body: { q?: string, limit?: number, status?: 'active'|'expired'|'pending'|'archived', type?: string }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/documents?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}{{ $json.body.type ? '&type=' + $json.body.type : '' }}", "options": {} },
+      "id": "http-docs-list", "name": "HTTP documents/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-docs-list", "name": "Respond documents/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-get", "name": "documents/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "documents-get",
+      "notes": "Get a document by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}", "options": {} },
+      "id": "http-docs-get", "name": "HTTP documents/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-docs-get", "name": "Respond documents/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-create", "name": "documents/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "documents-create",
+      "notes": "Create a new document. Body: { title: string (required), description?: string, type?: string (contract/agreement/receipt/id), expires?: string (ISO datetime), status?: 'active'|'expired'|'pending'|'archived', file_url?: string, person_id?: string, place_id?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/documents", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-docs-create", "name": "HTTP documents/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-docs-create", "name": "Respond documents/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-update", "name": "documents/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "documents-update",
+      "notes": "Update a document. Body: { id: string (required), title: string (required), status?: string, expires?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-docs-update", "name": "HTTP documents/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-docs-update", "name": "Respond documents/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-patch", "name": "documents/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "documents-patch",
+      "notes": "Partially update a document. Body: { id: string (required), status?: string, expires?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-docs-patch", "name": "HTTP documents/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-docs-patch", "name": "Respond documents/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "documents/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-docs-delete", "name": "documents/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "documents-delete",
+      "notes": "Delete a document. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/documents/{{ $json.body.id }}", "options": {} },
+      "id": "http-docs-delete", "name": "HTTP documents/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-docs-delete", "name": "Respond documents/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "documents/list": { "main": [[{ "node": "HTTP documents/list", "type": "main", "index": 0 }]] },
+    "HTTP documents/list": { "main": [[{ "node": "Respond documents/list", "type": "main", "index": 0 }]] },
+    "documents/get": { "main": [[{ "node": "HTTP documents/get", "type": "main", "index": 0 }]] },
+    "HTTP documents/get": { "main": [[{ "node": "Respond documents/get", "type": "main", "index": 0 }]] },
+    "documents/create": { "main": [[{ "node": "HTTP documents/create", "type": "main", "index": 0 }]] },
+    "HTTP documents/create": { "main": [[{ "node": "Respond documents/create", "type": "main", "index": 0 }]] },
+    "documents/update": { "main": [[{ "node": "HTTP documents/update", "type": "main", "index": 0 }]] },
+    "HTTP documents/update": { "main": [[{ "node": "Respond documents/update", "type": "main", "index": 0 }]] },
+    "documents/patch": { "main": [[{ "node": "HTTP documents/patch", "type": "main", "index": 0 }]] },
+    "HTTP documents/patch": { "main": [[{ "node": "Respond documents/patch", "type": "main", "index": 0 }]] },
+    "documents/delete": { "main": [[{ "node": "HTTP documents/delete", "type": "main", "index": 0 }]] },
+    "HTTP documents/delete": { "main": [[{ "node": "Respond documents/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-documents" },
+  "tags": []
+}
+

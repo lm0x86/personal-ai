@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Memories",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-list", "name": "memories/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "memories-list",
+      "notes": "List and search memories/notes. Body: { q?: string, limit?: number, category?: string, importance?: 'low'|'medium'|'high' }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/memories?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.category ? '&category=' + $json.body.category : '' }}{{ $json.body.importance ? '&importance=' + $json.body.importance : '' }}", "options": {} },
+      "id": "http-mem-list", "name": "HTTP memories/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-mem-list", "name": "Respond memories/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-get", "name": "memories/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "memories-get",
+      "notes": "Get a memory by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}", "options": {} },
+      "id": "http-mem-get", "name": "HTTP memories/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-mem-get", "name": "Respond memories/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-create", "name": "memories/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "memories-create",
+      "notes": "Create a new memory/note. Body: { title: string (required), description?: string (full content), category?: string (idea/fact/preference/instruction), importance?: 'low'|'medium'|'high', related_id?: string, related_type?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/memories", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-mem-create", "name": "HTTP memories/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-mem-create", "name": "Respond memories/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-update", "name": "memories/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "memories-update",
+      "notes": "Update a memory. Body: { id: string (required), title: string (required), description?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-mem-update", "name": "HTTP memories/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-mem-update", "name": "Respond memories/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-patch", "name": "memories/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "memories-patch",
+      "notes": "Partially update a memory. Body: { id: string (required), title?: string, description?: string, importance?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-mem-patch", "name": "HTTP memories/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-mem-patch", "name": "Respond memories/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "memories/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-mem-delete", "name": "memories/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "memories-delete",
+      "notes": "Delete a memory. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/memories/{{ $json.body.id }}", "options": {} },
+      "id": "http-mem-delete", "name": "HTTP memories/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-mem-delete", "name": "Respond memories/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "memories/list": { "main": [[{ "node": "HTTP memories/list", "type": "main", "index": 0 }]] },
+    "HTTP memories/list": { "main": [[{ "node": "Respond memories/list", "type": "main", "index": 0 }]] },
+    "memories/get": { "main": [[{ "node": "HTTP memories/get", "type": "main", "index": 0 }]] },
+    "HTTP memories/get": { "main": [[{ "node": "Respond memories/get", "type": "main", "index": 0 }]] },
+    "memories/create": { "main": [[{ "node": "HTTP memories/create", "type": "main", "index": 0 }]] },
+    "HTTP memories/create": { "main": [[{ "node": "Respond memories/create", "type": "main", "index": 0 }]] },
+    "memories/update": { "main": [[{ "node": "HTTP memories/update", "type": "main", "index": 0 }]] },
+    "HTTP memories/update": { "main": [[{ "node": "Respond memories/update", "type": "main", "index": 0 }]] },
+    "memories/patch": { "main": [[{ "node": "HTTP memories/patch", "type": "main", "index": 0 }]] },
+    "HTTP memories/patch": { "main": [[{ "node": "Respond memories/patch", "type": "main", "index": 0 }]] },
+    "memories/delete": { "main": [[{ "node": "HTTP memories/delete", "type": "main", "index": 0 }]] },
+    "HTTP memories/delete": { "main": [[{ "node": "Respond memories/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-memories" },
+  "tags": []
+}
+

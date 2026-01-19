@@ -31,7 +31,7 @@ class VectorStoreService {
   constructor() {
     this.baseUrl = config.vectorStore.baseUrl;
     this.apiKey = config.vectorStore.apiKey;
-    this.indexName = config.indexName;
+    this.indexName = config.indexName || 'default_index';
   }
 
   private getHeaders(): Record<string, string> {
@@ -159,12 +159,15 @@ class VectorStoreService {
       entity_type: entityType,
     };
     
+    // Lowercase query for case-insensitive search
+    const query = options.query?.toLowerCase();
+    
     const response = await fetch(`${this.baseUrl}/search`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({
         index: this.indexName,
-        query: options.query,
+        query,
         filters,
         limit: options.limit || 10,
         type: options.searchType || 'hybrid',
@@ -188,12 +191,15 @@ class VectorStoreService {
   async searchAllTypes(
     options: SearchOptions
   ): Promise<SearchResult<BaseEntity>> {
+    // Lowercase query for case-insensitive search
+    const query = options.query?.toLowerCase();
+    
     const response = await fetch(`${this.baseUrl}/search`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({
         index: this.indexName,
-        query: options.query,
+        query,
         filters: options.filters,
         limit: options.limit || 10,
         type: options.searchType || 'hybrid',

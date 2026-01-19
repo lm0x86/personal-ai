@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Projects",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-list", "name": "projects/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "projects-list",
+      "notes": "List and search projects. Body: { q?: string, limit?: number, status?: 'active'|'completed'|'on_hold'|'cancelled' }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/projects?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}", "options": {} },
+      "id": "http-prj-list", "name": "HTTP projects/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-prj-list", "name": "Respond projects/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-get", "name": "projects/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "projects-get",
+      "notes": "Get a project by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}", "options": {} },
+      "id": "http-prj-get", "name": "HTTP projects/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-prj-get", "name": "Respond projects/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-create", "name": "projects/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "projects-create",
+      "notes": "Create a new project. Body: { title: string (required), description?: string, status?: 'active'|'completed'|'on_hold'|'cancelled', deadline?: string (ISO datetime), goal?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/projects", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-prj-create", "name": "HTTP projects/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-prj-create", "name": "Respond projects/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-update", "name": "projects/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "projects-update",
+      "notes": "Update a project. Body: { id: string (required), title: string (required), status?: string, deadline?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-prj-update", "name": "HTTP projects/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-prj-update", "name": "Respond projects/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-patch", "name": "projects/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "projects-patch",
+      "notes": "Partially update a project. Body: { id: string (required), status?: string, deadline?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-prj-patch", "name": "HTTP projects/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-prj-patch", "name": "Respond projects/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "projects/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-prj-delete", "name": "projects/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "projects-delete",
+      "notes": "Delete a project. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/projects/{{ $json.body.id }}", "options": {} },
+      "id": "http-prj-delete", "name": "HTTP projects/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-prj-delete", "name": "Respond projects/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "projects/list": { "main": [[{ "node": "HTTP projects/list", "type": "main", "index": 0 }]] },
+    "HTTP projects/list": { "main": [[{ "node": "Respond projects/list", "type": "main", "index": 0 }]] },
+    "projects/get": { "main": [[{ "node": "HTTP projects/get", "type": "main", "index": 0 }]] },
+    "HTTP projects/get": { "main": [[{ "node": "Respond projects/get", "type": "main", "index": 0 }]] },
+    "projects/create": { "main": [[{ "node": "HTTP projects/create", "type": "main", "index": 0 }]] },
+    "HTTP projects/create": { "main": [[{ "node": "Respond projects/create", "type": "main", "index": 0 }]] },
+    "projects/update": { "main": [[{ "node": "HTTP projects/update", "type": "main", "index": 0 }]] },
+    "HTTP projects/update": { "main": [[{ "node": "Respond projects/update", "type": "main", "index": 0 }]] },
+    "projects/patch": { "main": [[{ "node": "HTTP projects/patch", "type": "main", "index": 0 }]] },
+    "HTTP projects/patch": { "main": [[{ "node": "Respond projects/patch", "type": "main", "index": 0 }]] },
+    "projects/delete": { "main": [[{ "node": "HTTP projects/delete", "type": "main", "index": 0 }]] },
+    "HTTP projects/delete": { "main": [[{ "node": "Respond projects/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-projects" },
+  "tags": []
+}
+

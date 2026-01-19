@@ -1,0 +1,268 @@
+{
+  "name": "Assistant - Tasks",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/list",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-list",
+      "name": "tasks/list",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "tasks-list",
+      "notes": "List and search tasks. Body: { q?: string (search query), limit?: number (default 10), status?: 'pending'|'in_progress'|'completed'|'cancelled', priority?: 'low'|'medium'|'high'|'urgent' }"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/tasks?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.status ? '&status=' + $json.body.status : '' }}{{ $json.body.priority ? '&priority=' + $json.body.priority : '' }}",
+        "options": {}
+      },
+      "id": "http-tasks-list",
+      "name": "HTTP tasks/list",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "res-tasks-list",
+      "name": "Respond tasks/list",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-get",
+      "name": "tasks/get",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 200],
+      "webhookId": "tasks-get",
+      "notes": "Get a task by ID. Body: { id: string (required, e.g. 'tsk_abc123') }"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-tasks-get",
+      "name": "HTTP tasks/get",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "res-tasks-get",
+      "name": "Respond tasks/get",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/create",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-create",
+      "name": "tasks/create",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 400],
+      "webhookId": "tasks-create",
+      "notes": "Create a new task. Body: { title: string (required), description?: string, status?: 'pending'|'in_progress'|'completed'|'cancelled', priority?: 'low'|'medium'|'high'|'urgent', due_date?: string (ISO datetime), person_id?: string, place_id?: string, project_id?: string, document_id?: string }"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://personal.optdevtech.com/api/tasks",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-create",
+      "name": "HTTP tasks/create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "res-tasks-create",
+      "name": "Respond tasks/create",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-update",
+      "name": "tasks/update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 600],
+      "webhookId": "tasks-update",
+      "notes": "Update a task (full replace). Body: { id: string (required), title: string (required), description?: string, status?: string, priority?: string, due_date?: string, person_id?: string, place_id?: string, project_id?: string }"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-update",
+      "name": "HTTP tasks/update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "res-tasks-update",
+      "name": "Respond tasks/update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/patch",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-patch",
+      "name": "tasks/patch",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 800],
+      "webhookId": "tasks-patch",
+      "notes": "Partially update a task. Body: { id: string (required), title?: string, description?: string, status?: 'pending'|'in_progress'|'completed'|'cancelled', priority?: 'low'|'medium'|'high'|'urgent', due_date?: string }"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "http-tasks-patch",
+      "name": "HTTP tasks/patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 800]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "res-tasks-patch",
+      "name": "Respond tasks/patch",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 800]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tasks/delete",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tasks-delete",
+      "name": "tasks/delete",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 1000],
+      "webhookId": "tasks-delete",
+      "notes": "Delete a task. Body: { id: string (required) }"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://personal.optdevtech.com/api/tasks/{{ $json.body.id }}",
+        "options": {}
+      },
+      "id": "http-tasks-delete",
+      "name": "HTTP tasks/delete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 1000]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}",
+        "options": {}
+      },
+      "id": "res-tasks-delete",
+      "name": "Respond tasks/delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "tasks/list": { "main": [[{ "node": "HTTP tasks/list", "type": "main", "index": 0 }]] },
+    "HTTP tasks/list": { "main": [[{ "node": "Respond tasks/list", "type": "main", "index": 0 }]] },
+    "tasks/get": { "main": [[{ "node": "HTTP tasks/get", "type": "main", "index": 0 }]] },
+    "HTTP tasks/get": { "main": [[{ "node": "Respond tasks/get", "type": "main", "index": 0 }]] },
+    "tasks/create": { "main": [[{ "node": "HTTP tasks/create", "type": "main", "index": 0 }]] },
+    "HTTP tasks/create": { "main": [[{ "node": "Respond tasks/create", "type": "main", "index": 0 }]] },
+    "tasks/update": { "main": [[{ "node": "HTTP tasks/update", "type": "main", "index": 0 }]] },
+    "HTTP tasks/update": { "main": [[{ "node": "Respond tasks/update", "type": "main", "index": 0 }]] },
+    "tasks/patch": { "main": [[{ "node": "HTTP tasks/patch", "type": "main", "index": 0 }]] },
+    "HTTP tasks/patch": { "main": [[{ "node": "Respond tasks/patch", "type": "main", "index": 0 }]] },
+    "tasks/delete": { "main": [[{ "node": "HTTP tasks/delete", "type": "main", "index": 0 }]] },
+    "HTTP tasks/delete": { "main": [[{ "node": "Respond tasks/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-tasks" },
+  "tags": []
+}
+

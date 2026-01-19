@@ -10,5 +10,5 @@ export const config = {
   },
   
   // Single index name for all entities
-  indexName: process.env.INDEX_NAME || 'assistant',
+  indexName: process.env.INDEX_NAME,
 };

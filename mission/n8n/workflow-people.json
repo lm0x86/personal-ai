@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - People",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-list", "name": "people/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "people-list",
+      "notes": "List and search people/contacts. Body: { q?: string, limit?: number, relationship?: string }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/people?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.relationship ? '&relationship=' + $json.body.relationship : '' }}", "options": {} },
+      "id": "http-people-list", "name": "HTTP people/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-people-list", "name": "Respond people/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-get", "name": "people/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "people-get",
+      "notes": "Get a person by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}", "options": {} },
+      "id": "http-people-get", "name": "HTTP people/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-people-get", "name": "Respond people/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-create", "name": "people/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "people-create",
+      "notes": "Create a new person/contact. Body: { title: string (required - person's name), description?: string, phone?: string, email?: string, relationship?: string (friend/colleague/landlord/doctor), company?: string, address?: string, birthday?: string, notes?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/people", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-people-create", "name": "HTTP people/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-people-create", "name": "Respond people/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-update", "name": "people/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "people-update",
+      "notes": "Update a person. Body: { id: string (required), title: string (required), phone?: string, email?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-people-update", "name": "HTTP people/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-people-update", "name": "Respond people/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-patch", "name": "people/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "people-patch",
+      "notes": "Partially update a person. Body: { id: string (required), title?: string, phone?: string, email?: string, notes?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-people-patch", "name": "HTTP people/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-people-patch", "name": "Respond people/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "people/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-people-delete", "name": "people/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "people-delete",
+      "notes": "Delete a person. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/people/{{ $json.body.id }}", "options": {} },
+      "id": "http-people-delete", "name": "HTTP people/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-people-delete", "name": "Respond people/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "people/list": { "main": [[{ "node": "HTTP people/list", "type": "main", "index": 0 }]] },
+    "HTTP people/list": { "main": [[{ "node": "Respond people/list", "type": "main", "index": 0 }]] },
+    "people/get": { "main": [[{ "node": "HTTP people/get", "type": "main", "index": 0 }]] },
+    "HTTP people/get": { "main": [[{ "node": "Respond people/get", "type": "main", "index": 0 }]] },
+    "people/create": { "main": [[{ "node": "HTTP people/create", "type": "main", "index": 0 }]] },
+    "HTTP people/create": { "main": [[{ "node": "Respond people/create", "type": "main", "index": 0 }]] },
+    "people/update": { "main": [[{ "node": "HTTP people/update", "type": "main", "index": 0 }]] },
+    "HTTP people/update": { "main": [[{ "node": "Respond people/update", "type": "main", "index": 0 }]] },
+    "people/patch": { "main": [[{ "node": "HTTP people/patch", "type": "main", "index": 0 }]] },
+    "HTTP people/patch": { "main": [[{ "node": "Respond people/patch", "type": "main", "index": 0 }]] },
+    "people/delete": { "main": [[{ "node": "HTTP people/delete", "type": "main", "index": 0 }]] },
+    "HTTP people/delete": { "main": [[{ "node": "Respond people/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-people" },
+  "tags": []
+}
+

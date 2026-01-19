@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Reminders",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-list", "name": "reminders/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "reminders-list",
+      "notes": "List and search reminders. Body: { q?: string, limit?: number }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/reminders?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}", "options": {} },
+      "id": "http-rem-list", "name": "HTTP reminders/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-rem-list", "name": "Respond reminders/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-get", "name": "reminders/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "reminders-get",
+      "notes": "Get a reminder by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}", "options": {} },
+      "id": "http-rem-get", "name": "HTTP reminders/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-rem-get", "name": "Respond reminders/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-create", "name": "reminders/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "reminders-create",
+      "notes": "Create a new reminder. Body: { title: string (required), remind_at: string (required, ISO datetime), description?: string, related_id?: string, related_type?: 'task'|'event'|'document'|'person'|'place'|'project'|'memory', recurring?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/reminders", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-rem-create", "name": "HTTP reminders/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-rem-create", "name": "Respond reminders/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-update", "name": "reminders/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "reminders-update",
+      "notes": "Update a reminder. Body: { id: string (required), title: string (required), remind_at: string (required) }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-rem-update", "name": "HTTP reminders/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-rem-update", "name": "Respond reminders/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-patch", "name": "reminders/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "reminders-patch",
+      "notes": "Partially update a reminder. Body: { id: string (required), title?: string, remind_at?: string, snoozed_until?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-rem-patch", "name": "HTTP reminders/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-rem-patch", "name": "Respond reminders/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "reminders/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-rem-delete", "name": "reminders/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "reminders-delete",
+      "notes": "Delete a reminder. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/reminders/{{ $json.body.id }}", "options": {} },
+      "id": "http-rem-delete", "name": "HTTP reminders/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-rem-delete", "name": "Respond reminders/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "reminders/list": { "main": [[{ "node": "HTTP reminders/list", "type": "main", "index": 0 }]] },
+    "HTTP reminders/list": { "main": [[{ "node": "Respond reminders/list", "type": "main", "index": 0 }]] },
+    "reminders/get": { "main": [[{ "node": "HTTP reminders/get", "type": "main", "index": 0 }]] },
+    "HTTP reminders/get": { "main": [[{ "node": "Respond reminders/get", "type": "main", "index": 0 }]] },
+    "reminders/create": { "main": [[{ "node": "HTTP reminders/create", "type": "main", "index": 0 }]] },
+    "HTTP reminders/create": { "main": [[{ "node": "Respond reminders/create", "type": "main", "index": 0 }]] },
+    "reminders/update": { "main": [[{ "node": "HTTP reminders/update", "type": "main", "index": 0 }]] },
+    "HTTP reminders/update": { "main": [[{ "node": "Respond reminders/update", "type": "main", "index": 0 }]] },
+    "reminders/patch": { "main": [[{ "node": "HTTP reminders/patch", "type": "main", "index": 0 }]] },
+    "HTTP reminders/patch": { "main": [[{ "node": "Respond reminders/patch", "type": "main", "index": 0 }]] },
+    "reminders/delete": { "main": [[{ "node": "HTTP reminders/delete", "type": "main", "index": 0 }]] },
+    "HTTP reminders/delete": { "main": [[{ "node": "Respond reminders/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-reminders" },
+  "tags": []
+}
+

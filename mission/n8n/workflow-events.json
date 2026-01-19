@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Events",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-list", "name": "events/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "events-list",
+      "notes": "List and search events. Body: { q?: string, limit?: number }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/events?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}", "options": {} },
+      "id": "http-events-list", "name": "HTTP events/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-events-list", "name": "Respond events/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-get", "name": "events/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "events-get",
+      "notes": "Get an event by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "options": {} },
+      "id": "http-events-get", "name": "HTTP events/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-events-get", "name": "Respond events/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-create", "name": "events/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "events-create",
+      "notes": "Create a new event. Body: { title: string (required), start_time: string (required, ISO datetime), description?: string, end_time?: string, all_day?: boolean, person_id?: string, place_id?: string, project_id?: string, recurring?: 'daily'|'weekly'|'monthly'|'yearly' }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/events", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-events-create", "name": "HTTP events/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-events-create", "name": "Respond events/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-update", "name": "events/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "events-update",
+      "notes": "Update an event. Body: { id: string (required), title: string (required), start_time: string (required), end_time?: string, description?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-events-update", "name": "HTTP events/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-events-update", "name": "Respond events/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-patch", "name": "events/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "events-patch",
+      "notes": "Partially update an event. Body: { id: string (required), title?: string, start_time?: string, end_time?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-events-patch", "name": "HTTP events/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-events-patch", "name": "Respond events/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "events/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-events-delete", "name": "events/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "events-delete",
+      "notes": "Delete an event. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "options": {} },
+      "id": "http-events-delete", "name": "HTTP events/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-events-delete", "name": "Respond events/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "events/list": { "main": [[{ "node": "HTTP events/list", "type": "main", "index": 0 }]] },
+    "HTTP events/list": { "main": [[{ "node": "Respond events/list", "type": "main", "index": 0 }]] },
+    "events/get": { "main": [[{ "node": "HTTP events/get", "type": "main", "index": 0 }]] },
+    "HTTP events/get": { "main": [[{ "node": "Respond events/get", "type": "main", "index": 0 }]] },
+    "events/create": { "main": [[{ "node": "HTTP events/create", "type": "main", "index": 0 }]] },
+    "HTTP events/create": { "main": [[{ "node": "Respond events/create", "type": "main", "index": 0 }]] },
+    "events/update": { "main": [[{ "node": "HTTP events/update", "type": "main", "index": 0 }]] },
+    "HTTP events/update": { "main": [[{ "node": "Respond events/update", "type": "main", "index": 0 }]] },
+    "events/patch": { "main": [[{ "node": "HTTP events/patch", "type": "main", "index": 0 }]] },
+    "HTTP events/patch": { "main": [[{ "node": "Respond events/patch", "type": "main", "index": 0 }]] },
+    "events/delete": { "main": [[{ "node": "HTTP events/delete", "type": "main", "index": 0 }]] },
+    "HTTP events/delete": { "main": [[{ "node": "Respond events/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-events" },
+  "tags": []
+}
+

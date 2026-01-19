@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Places",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-list", "name": "places/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "places-list",
+      "notes": "List and search places. Body: { q?: string, limit?: number, type?: string }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/places?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.type ? '&type=' + $json.body.type : '' }}", "options": {} },
+      "id": "http-places-list", "name": "HTTP places/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-places-list", "name": "Respond places/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-get", "name": "places/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "places-get",
+      "notes": "Get a place by ID. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}", "options": {} },
+      "id": "http-places-get", "name": "HTTP places/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-places-get", "name": "Respond places/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-create", "name": "places/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "places-create",
+      "notes": "Create a new place. Body: { title: string (required - place name), description?: string, address?: string, person_id?: string (contact person), type?: string (home/office/warehouse/restaurant), notes?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/places", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-places-create", "name": "HTTP places/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-places-create", "name": "Respond places/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-update", "name": "places/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "places-update",
+      "notes": "Update a place. Body: { id: string (required), title: string (required), address?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-places-update", "name": "HTTP places/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-places-update", "name": "Respond places/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-patch", "name": "places/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "places-patch",
+      "notes": "Partially update a place. Body: { id: string (required), title?: string, address?: string, notes?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-places-patch", "name": "HTTP places/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-places-patch", "name": "Respond places/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "places/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-places-delete", "name": "places/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "places-delete",
+      "notes": "Delete a place. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/places/{{ $json.body.id }}", "options": {} },
+      "id": "http-places-delete", "name": "HTTP places/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
+      "id": "res-places-delete", "name": "Respond places/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "places/list": { "main": [[{ "node": "HTTP places/list", "type": "main", "index": 0 }]] },
+    "HTTP places/list": { "main": [[{ "node": "Respond places/list", "type": "main", "index": 0 }]] },
+    "places/get": { "main": [[{ "node": "HTTP places/get", "type": "main", "index": 0 }]] },
+    "HTTP places/get": { "main": [[{ "node": "Respond places/get", "type": "main", "index": 0 }]] },
+    "places/create": { "main": [[{ "node": "HTTP places/create", "type": "main", "index": 0 }]] },
+    "HTTP places/create": { "main": [[{ "node": "Respond places/create", "type": "main", "index": 0 }]] },
+    "places/update": { "main": [[{ "node": "HTTP places/update", "type": "main", "index": 0 }]] },
+    "HTTP places/update": { "main": [[{ "node": "Respond places/update", "type": "main", "index": 0 }]] },
+    "places/patch": { "main": [[{ "node": "HTTP places/patch", "type": "main", "index": 0 }]] },
+    "HTTP places/patch": { "main": [[{ "node": "Respond places/patch", "type": "main", "index": 0 }]] },
+    "places/delete": { "main": [[{ "node": "HTTP places/delete", "type": "main", "index": 0 }]] },
+    "HTTP places/delete": { "main": [[{ "node": "Respond places/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-places" },
+  "tags": []
+}
+

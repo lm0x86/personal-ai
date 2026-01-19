@@ -1,0 +1,43 @@
+{
+  "name": "Assistant - Search",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "search", "responseMode": "responseNode", "options": {} },
+      "id": "wh-search", "name": "search", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "search",
+      "notes": "Unified search across all entity types. Body: { query: string (required - natural language search), types?: array (optional - filter by types: task/event/reminder/person/place/document/memory/project), limit?: number (default 10), search_type?: 'hybrid'|'openai_dense'|'bge_m3_dense'|'bge_m3_sparse' }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/search", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-search", "name": "HTTP search", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-search", "name": "Respond search", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "health", "responseMode": "responseNode", "options": {} },
+      "id": "wh-health", "name": "health", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "health",
+      "notes": "Health check endpoint. Body: {} (empty - no parameters required)"
+    },
+    {
+      "parameters": { "method": "GET", "url": "https://personal.optdevtech.com/health", "options": {} },
+      "id": "http-health", "name": "HTTP health", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-health", "name": "Respond health", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    }
+  ],
+  "connections": {
+    "search": { "main": [[{ "node": "HTTP search", "type": "main", "index": 0 }]] },
+    "HTTP search": { "main": [[{ "node": "Respond search", "type": "main", "index": 0 }]] },
+    "health": { "main": [[{ "node": "HTTP health", "type": "main", "index": 0 }]] },
+    "HTTP health": { "main": [[{ "node": "Respond health", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-search" },
+  "tags": []
+}
+
