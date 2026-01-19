@@ -8,9 +8,14 @@
     "build": "tsc",
     "start": "node dist/index.js"
   },
-  "keywords": ["express", "typescript", "api"],
+  "keywords": [
+    "express",
+    "typescript",
+    "api"
+  ],
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^4.21.0"
   },
   "devDependencies": {
@@ -20,4 +25,3 @@
     "typescript": "^5.6.0"
   }
 }
-

@@ -1,0 +1,1998 @@
+{
+  "requests": [
+    {
+      "name": "list_tasks",
+      "description": "List and search tasks with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/tasks",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return (default: 10)"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by task status",
+          "values": {
+            "pending": "Not started",
+            "in_progress": "Currently working on",
+            "completed": "Finished",
+            "cancelled": "No longer needed"
+          }
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by priority level",
+          "values": {
+            "low": "Low priority",
+            "medium": "Medium priority",
+            "high": "High priority",
+            "urgent": "Urgent priority"
+          }
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_task",
+      "description": "Get a single task by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/tasks/{{task_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique task ID (e.g., tsk_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_task",
+      "description": "Create a new task",
+      "method": "post",
+      "url": "{{base_url}}/api/tasks",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The task title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the task"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Task status",
+          "values": {
+            "pending": "Not started",
+            "in_progress": "Currently working on",
+            "completed": "Finished",
+            "cancelled": "No longer needed"
+          }
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Priority level",
+          "values": {
+            "low": "Low priority",
+            "medium": "Medium priority",
+            "high": "High priority",
+            "urgent": "Urgent priority"
+          }
+        },
+        {
+          "name": "due_date",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Due date in ISO 8601 format (e.g., 2026-01-22T10:00:00Z)"
+        },
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related person"
+        },
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related place"
+        },
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of parent project"
+        },
+        {
+          "name": "document_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related document"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"status\": \"{{status}}\", \"priority\": \"{{priority}}\", \"due_date\": \"{{due_date}}\", \"person_id\": \"{{person_id}}\", \"place_id\": \"{{place_id}}\", \"project_id\": \"{{project_id}}\", \"document_id\": \"{{document_id}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_task",
+      "description": "Fully update an existing task (replaces all fields)",
+      "method": "put",
+      "url": "{{base_url}}/api/tasks/{{task_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique task ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The task title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the task"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Task status"
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Priority level"
+        },
+        {
+          "name": "due_date",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Due date in ISO 8601 format"
+        },
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related person"
+        },
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related place"
+        },
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of parent project"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"status\": \"{{status}}\", \"priority\": \"{{priority}}\", \"due_date\": \"{{due_date}}\", \"person_id\": \"{{person_id}}\", \"place_id\": \"{{place_id}}\", \"project_id\": \"{{project_id}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_task",
+      "description": "Partially update a task (only specified fields)",
+      "method": "patch",
+      "url": "{{base_url}}/api/tasks/{{task_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique task ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The task title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Task status"
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Priority level"
+        },
+        {
+          "name": "due_date",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Due date"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_task",
+      "description": "Delete a task by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/tasks/{{task_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "task_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique task ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_events",
+      "description": "List and search calendar events with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/events",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_event",
+      "description": "Get a single event by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/events/{{event_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique event ID (e.g., evt_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_event",
+      "description": "Create a new calendar event",
+      "method": "post",
+      "url": "{{base_url}}/api/events",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The event title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the event"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "Event start time in ISO 8601 format (e.g., 2026-01-22T10:00:00Z)"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Event end time in ISO 8601 format"
+        },
+        {
+          "name": "all_day",
+          "type": "boolean",
+          "required": false,
+          "location": "body",
+          "description": "Whether this is an all-day event"
+        },
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related person"
+        },
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of event location"
+        },
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of parent project"
+        },
+        {
+          "name": "recurring",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Recurrence pattern",
+          "values": {
+            "daily": "Repeats every day",
+            "weekly": "Repeats every week",
+            "monthly": "Repeats every month",
+            "yearly": "Repeats every year"
+          }
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"start_time\": \"{{start_time}}\", \"end_time\": \"{{end_time}}\", \"all_day\": {{all_day}}, \"person_id\": \"{{person_id}}\", \"place_id\": \"{{place_id}}\", \"project_id\": \"{{project_id}}\", \"recurring\": \"{{recurring}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_event",
+      "description": "Fully update an existing event",
+      "method": "put",
+      "url": "{{base_url}}/api/events/{{event_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique event ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The event title"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "Event start time"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Event end time"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"start_time\": \"{{start_time}}\", \"end_time\": \"{{end_time}}\", \"description\": \"{{description}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_event",
+      "description": "Partially update an event",
+      "method": "patch",
+      "url": "{{base_url}}/api/events/{{event_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique event ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The event title"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Event start time"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Event end time"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_event",
+      "description": "Delete an event by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/events/{{event_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique event ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_reminders",
+      "description": "List and search reminders with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/reminders",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_reminder",
+      "description": "Get a single reminder by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/reminders/{{reminder_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "reminder_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique reminder ID (e.g., rem_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_reminder",
+      "description": "Create a new reminder",
+      "method": "post",
+      "url": "{{base_url}}/api/reminders",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The reminder title/message"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the reminder"
+        },
+        {
+          "name": "remind_at",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "When to trigger the reminder in ISO 8601 format"
+        },
+        {
+          "name": "related_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of the related entity"
+        },
+        {
+          "name": "related_type",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Type of related entity",
+          "values": {
+            "task": "Related to a task",
+            "event": "Related to an event",
+            "document": "Related to a document",
+            "person": "Related to a person",
+            "place": "Related to a place",
+            "project": "Related to a project",
+            "memory": "Related to a memory"
+          }
+        },
+        {
+          "name": "recurring",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Recurrence pattern (daily, weekly, monthly, yearly)"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"remind_at\": \"{{remind_at}}\", \"related_id\": \"{{related_id}}\", \"related_type\": \"{{related_type}}\", \"recurring\": \"{{recurring}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_reminder",
+      "description": "Fully update an existing reminder",
+      "method": "put",
+      "url": "{{base_url}}/api/reminders/{{reminder_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "reminder_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique reminder ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The reminder title"
+        },
+        {
+          "name": "remind_at",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "When to trigger the reminder"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"remind_at\": \"{{remind_at}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_reminder",
+      "description": "Partially update a reminder",
+      "method": "patch",
+      "url": "{{base_url}}/api/reminders/{{reminder_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "reminder_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique reminder ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The reminder title"
+        },
+        {
+          "name": "remind_at",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "When to trigger"
+        },
+        {
+          "name": "snoozed_until",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Snooze until this time"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_reminder",
+      "description": "Delete a reminder by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/reminders/{{reminder_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "reminder_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique reminder ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_people",
+      "description": "List and search people/contacts with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/people",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        },
+        {
+          "name": "relationship",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by relationship type"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_person",
+      "description": "Get a single person by their ID",
+      "method": "get",
+      "url": "{{base_url}}/api/people/{{person_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique person ID (e.g., per_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_person",
+      "description": "Create a new person/contact",
+      "method": "post",
+      "url": "{{base_url}}/api/people",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The person's name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the person"
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Phone number"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Email address"
+        },
+        {
+          "name": "relationship",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Relationship type (e.g., friend, colleague, landlord, doctor)"
+        },
+        {
+          "name": "company",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Company or organization"
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Physical address"
+        },
+        {
+          "name": "birthday",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Birthday in ISO date format"
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional notes about the person"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"phone\": \"{{phone}}\", \"email\": \"{{email}}\", \"relationship\": \"{{relationship}}\", \"company\": \"{{company}}\", \"address\": \"{{address}}\", \"birthday\": \"{{birthday}}\", \"notes\": \"{{notes}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_person",
+      "description": "Fully update an existing person",
+      "method": "put",
+      "url": "{{base_url}}/api/people/{{person_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique person ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The person's name"
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Phone number"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Email address"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"phone\": \"{{phone}}\", \"email\": \"{{email}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_person",
+      "description": "Partially update a person",
+      "method": "patch",
+      "url": "{{base_url}}/api/people/{{person_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique person ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The person's name"
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Phone number"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Email address"
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional notes"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_person",
+      "description": "Delete a person by their ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/people/{{person_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique person ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_places",
+      "description": "List and search places/locations with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/places",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by place type"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_place",
+      "description": "Get a single place by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/places/{{place_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique place ID (e.g., plc_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_place",
+      "description": "Create a new place/location",
+      "method": "post",
+      "url": "{{base_url}}/api/places",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The place name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the place"
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Physical address"
+        },
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of contact person (e.g., owner)"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Place type (e.g., home, office, warehouse, restaurant)"
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional notes about the place"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"address\": \"{{address}}\", \"person_id\": \"{{person_id}}\", \"type\": \"{{type}}\", \"notes\": \"{{notes}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_place",
+      "description": "Fully update an existing place",
+      "method": "put",
+      "url": "{{base_url}}/api/places/{{place_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique place ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The place name"
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Physical address"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"address\": \"{{address}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_place",
+      "description": "Partially update a place",
+      "method": "patch",
+      "url": "{{base_url}}/api/places/{{place_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique place ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The place name"
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Physical address"
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional notes"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_place",
+      "description": "Delete a place by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/places/{{place_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique place ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_documents",
+      "description": "List and search documents with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/documents",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by document status",
+          "values": {
+            "active": "Currently active",
+            "expired": "Has expired",
+            "pending": "Awaiting action",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by document type"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_document",
+      "description": "Get a single document by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/documents/{{document_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "document_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique document ID (e.g., doc_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_document",
+      "description": "Create a new document record",
+      "method": "post",
+      "url": "{{base_url}}/api/documents",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The document title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the document"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Document type (e.g., contract, agreement, receipt, id)"
+        },
+        {
+          "name": "expires",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Expiration date in ISO 8601 format"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Document status",
+          "values": {
+            "active": "Currently active",
+            "expired": "Has expired",
+            "pending": "Awaiting action",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "file_url",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "URL to the document file"
+        },
+        {
+          "name": "person_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related person"
+        },
+        {
+          "name": "place_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related place"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"type\": \"{{type}}\", \"expires\": \"{{expires}}\", \"status\": \"{{status}}\", \"file_url\": \"{{file_url}}\", \"person_id\": \"{{person_id}}\", \"place_id\": \"{{place_id}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_document",
+      "description": "Fully update an existing document",
+      "method": "put",
+      "url": "{{base_url}}/api/documents/{{document_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "document_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique document ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The document title"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Document status"
+        },
+        {
+          "name": "expires",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Expiration date"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"status\": \"{{status}}\", \"expires\": \"{{expires}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_document",
+      "description": "Partially update a document",
+      "method": "patch",
+      "url": "{{base_url}}/api/documents/{{document_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "document_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique document ID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Document status"
+        },
+        {
+          "name": "expires",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Expiration date"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_document",
+      "description": "Delete a document by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/documents/{{document_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "document_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique document ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_memories",
+      "description": "List and search memories/notes with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/memories",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by category"
+        },
+        {
+          "name": "importance",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by importance level"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_memory",
+      "description": "Get a single memory by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/memories/{{memory_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "memory_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique memory ID (e.g., mem_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_memory",
+      "description": "Create a new memory/note",
+      "method": "post",
+      "url": "{{base_url}}/api/memories",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The memory title/summary"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The full memory content/details"
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Memory category (e.g., idea, fact, preference, instruction)"
+        },
+        {
+          "name": "importance",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Importance level",
+          "values": {
+            "low": "Low importance",
+            "medium": "Medium importance",
+            "high": "High importance"
+          }
+        },
+        {
+          "name": "related_id",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "ID of related entity"
+        },
+        {
+          "name": "related_type",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Type of related entity"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"category\": \"{{category}}\", \"importance\": \"{{importance}}\", \"related_id\": \"{{related_id}}\", \"related_type\": \"{{related_type}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_memory",
+      "description": "Fully update an existing memory",
+      "method": "put",
+      "url": "{{base_url}}/api/memories/{{memory_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "memory_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique memory ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The memory title"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The memory content"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_memory",
+      "description": "Partially update a memory",
+      "method": "patch",
+      "url": "{{base_url}}/api/memories/{{memory_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "memory_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique memory ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The memory title"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The memory content"
+        },
+        {
+          "name": "importance",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Importance level"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_memory",
+      "description": "Delete a memory by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/memories/{{memory_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "memory_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique memory ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "list_projects",
+      "description": "List and search projects with optional filters",
+      "method": "get",
+      "url": "{{base_url}}/api/projects",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Search query for semantic search"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Filter by project status",
+          "values": {
+            "active": "Currently active",
+            "completed": "Finished",
+            "on_hold": "Paused",
+            "cancelled": "Cancelled"
+          }
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "get_project",
+      "description": "Get a single project by its ID",
+      "method": "get",
+      "url": "{{base_url}}/api/projects/{{project_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique project ID (e.g., prj_abc123)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "create_project",
+      "description": "Create a new project",
+      "method": "post",
+      "url": "{{base_url}}/api/projects",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The project title/name"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Additional details about the project"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project status",
+          "values": {
+            "active": "Currently active",
+            "completed": "Finished",
+            "on_hold": "Paused",
+            "cancelled": "Cancelled"
+          }
+        },
+        {
+          "name": "deadline",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project deadline in ISO 8601 format"
+        },
+        {
+          "name": "goal",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "The project goal/objective"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"description\": \"{{description}}\", \"status\": \"{{status}}\", \"deadline\": \"{{deadline}}\", \"goal\": \"{{goal}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "update_project",
+      "description": "Fully update an existing project",
+      "method": "put",
+      "url": "{{base_url}}/api/projects/{{project_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique project ID"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The project title"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project status"
+        },
+        {
+          "name": "deadline",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project deadline"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"title\": \"{{title}}\", \"status\": \"{{status}}\", \"deadline\": \"{{deadline}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "patch_project",
+      "description": "Partially update a project",
+      "method": "patch",
+      "url": "{{base_url}}/api/projects/{{project_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique project ID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project status"
+        },
+        {
+          "name": "deadline",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Project deadline"
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{}"
+        }
+      ]
+    },
+    {
+      "name": "delete_project",
+      "description": "Delete a project by its ID",
+      "method": "delete",
+      "url": "{{base_url}}/api/projects/{{project_id}}",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "project_id",
+          "type": "string",
+          "required": true,
+          "location": "path",
+          "description": "The unique project ID to delete"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "search_all",
+      "description": "Search across all entity types using semantic search",
+      "method": "post",
+      "url": "{{base_url}}/api/search",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "location": "body",
+          "description": "The search query (natural language)"
+        },
+        {
+          "name": "types",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Array of entity types to search (default: all)",
+          "values": {
+            "task": "Search tasks",
+            "event": "Search events",
+            "reminder": "Search reminders",
+            "person": "Search people",
+            "place": "Search places",
+            "document": "Search documents",
+            "memory": "Search memories",
+            "project": "Search projects"
+          }
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "body",
+          "description": "Maximum number of results to return (default: 10)"
+        },
+        {
+          "name": "search_type",
+          "type": "string",
+          "required": false,
+          "location": "body",
+          "description": "Search algorithm to use",
+          "values": {
+            "hybrid": "Multi-vector hybrid search with reranking (default)",
+            "openai_dense": "OpenAI embeddings only (fastest)",
+            "bge_m3_dense": "BGE-M3 dense embeddings",
+            "bge_m3_sparse": "BGE-M3 sparse embeddings (keyword-like)"
+          }
+        }
+      ],
+      "body": [
+        {
+          "content-type": "application/json",
+          "data": "{\"query\": \"{{query}}\", \"types\": {{types}}, \"limit\": {{limit}}, \"search_type\": \"{{search_type}}\"}"
+        }
+      ]
+    },
+    {
+      "name": "search_simple",
+      "description": "Simple search across all entity types via query parameters",
+      "method": "get",
+      "url": "{{base_url}}/api/search",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [
+        {
+          "name": "q",
+          "type": "string",
+          "required": true,
+          "location": "query",
+          "description": "The search query (natural language)"
+        },
+        {
+          "name": "types",
+          "type": "string",
+          "required": false,
+          "location": "query",
+          "description": "Comma-separated list of entity types to search (e.g., task,event,person)"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": false,
+          "location": "query",
+          "description": "Maximum number of results to return (default: 10)"
+        }
+      ],
+      "body": []
+    },
+    {
+      "name": "health_check",
+      "description": "Check if the API is running and healthy",
+      "method": "get",
+      "url": "{{base_url}}/health",
+      "headers": {},
+      "content-type": "application/json",
+      "parameters": [],
+      "body": []
+    }
+  ],
+  "variables": {
+    "base_url": {
+      "description": "The base URL of the Personal AI Assistant API",
+      "default": "http://localhost:3000"
+    }
+  }
+}
+
