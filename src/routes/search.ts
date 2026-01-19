@@ -15,6 +15,7 @@ const ALL_ENTITY_TYPES: EntityType[] = [
   'project',
   'thing',
   'organization',
+  'history',
 ];
 
 // Extended type that includes search score and entity_type

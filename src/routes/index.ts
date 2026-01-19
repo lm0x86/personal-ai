@@ -3,7 +3,7 @@ import { createEntityRouter } from './createEntityRouter.js';
 import { searchRouter } from './search.js';
 import { entitiesRouter } from './entities.js';
 import { ID_PREFIX } from '../utils/id.js';
-import { Task, Event, Reminder, Person, Place, Document, Memory, Project, Thing, Organization } from '../types/entities.js';
+import { Task, Event, Reminder, Person, Place, Document, Memory, Project, Thing, Organization, History } from '../types/entities.js';
 
 const router = Router();
 
@@ -77,6 +77,12 @@ router.use('/things', createEntityRouter<Thing>({
 router.use('/organizations', createEntityRouter<Organization>({
   entityType: 'organization',
   idPrefix: ID_PREFIX.organization,
+}));
+
+// History (conversation summaries)
+router.use('/history', createEntityRouter<History>({
+  entityType: 'history',
+  idPrefix: ID_PREFIX.history,
 }));
 
 // Unified search

@@ -120,6 +120,12 @@ export interface Organization extends BaseEntity {
   notes?: string;
 }
 
+// History - conversation summaries
+export interface History extends BaseEntity {
+  summary: string; // Main summary of the conversation
+  date?: string; // Date of the conversation (ISO date)
+}
+
 // Entity type enum for references
 export type EntityType = 
   | 'task' 
@@ -131,10 +137,11 @@ export type EntityType =
   | 'memory' 
   | 'project'
   | 'thing'
-  | 'organization';
+  | 'organization'
+  | 'history';
 
 // Union type for any entity
-export type Entity = Task | Event | Reminder | Person | Place | Document | Memory | Project | Thing | Organization;
+export type Entity = Task | Event | Reminder | Person | Place | Document | Memory | Project | Thing | Organization | History;
 
 // Create input types (id is auto-generated)
 export type CreateTask = Omit<Task, 'id'> & { id?: string };
@@ -147,4 +154,5 @@ export type CreateMemory = Omit<Memory, 'id'> & { id?: string };
 export type CreateProject = Omit<Project, 'id'> & { id?: string };
 export type CreateThing = Omit<Thing, 'id'> & { id?: string };
 export type CreateOrganization = Omit<Organization, 'id'> & { id?: string };
+export type CreateHistory = Omit<History, 'id'> & { id?: string };
 

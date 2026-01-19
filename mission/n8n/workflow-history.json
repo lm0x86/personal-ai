@@ -1,0 +1,73 @@
+{
+  "name": "Assistant - History",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "history/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-list", "name": "history/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "history-list",
+      "notes": "List and search conversation history. Body: { q?: string (search query), limit?: number (default 10), date?: string (filter by date) }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/history?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.date ? '&date=' + $json.body.date : '' }}", "options": {} },
+      "id": "http-history-list", "name": "HTTP history/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-history-list", "name": "Respond history/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "history/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-get", "name": "history/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "history-get",
+      "notes": "Get a history entry by ID. Body: { id: string (required, e.g. 'hst_abc123') }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/history/{{ $json.body.id }}", "options": {} },
+      "id": "http-history-get", "name": "HTTP history/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-history-get", "name": "Respond history/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "history/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-create", "name": "history/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "history-create",
+      "notes": "Create a new history entry (conversation summary). Body: { title: string (required - short title), summary: string (required - conversation summary), date?: string (ISO date, defaults to today), description?: string (optional full details) }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/history", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-history-create", "name": "HTTP history/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-history-create", "name": "Respond history/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "history/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-delete", "name": "history/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "history-delete",
+      "notes": "Delete a history entry. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/history/{{ $json.body.id }}", "options": {} },
+      "id": "http-history-delete", "name": "HTTP history/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}", "options": {} },
+      "id": "res-history-delete", "name": "Respond history/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    }
+  ],
+  "connections": {
+    "history/list": { "main": [[{ "node": "HTTP history/list", "type": "main", "index": 0 }]] },
+    "HTTP history/list": { "main": [[{ "node": "Respond history/list", "type": "main", "index": 0 }]] },
+    "history/get": { "main": [[{ "node": "HTTP history/get", "type": "main", "index": 0 }]] },
+    "HTTP history/get": { "main": [[{ "node": "Respond history/get", "type": "main", "index": 0 }]] },
+    "history/create": { "main": [[{ "node": "HTTP history/create", "type": "main", "index": 0 }]] },
+    "HTTP history/create": { "main": [[{ "node": "Respond history/create", "type": "main", "index": 0 }]] },
+    "history/delete": { "main": [[{ "node": "HTTP history/delete", "type": "main", "index": 0 }]] },
+    "HTTP history/delete": { "main": [[{ "node": "Respond history/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-history" },
+  "tags": []
+}
+

@@ -10,6 +10,7 @@ export const ID_PREFIX = {
   project: 'prj',
   thing: 'thg',
   organization: 'org',
+  history: 'hst',
 } as const;
 
 export type IdPrefix = typeof ID_PREFIX[keyof typeof ID_PREFIX];

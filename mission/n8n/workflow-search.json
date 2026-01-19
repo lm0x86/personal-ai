@@ -4,7 +4,7 @@
     {
       "parameters": { "httpMethod": "POST", "path": "search", "responseMode": "responseNode", "options": {} },
       "id": "wh-search", "name": "search", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "search",
-      "notes": "Unified search across all entity types. Body: { query: string (required - natural language search), types?: string|array (optional - filter by types: task/event/reminder/person/place/document/memory/project/thing/organization), limit?: number (default 10), search_type?: 'hybrid'|'openai_dense'|'bge_m3_dense'|'bge_m3_sparse' }"
+      "notes": "Unified search across all entity types. Body: { query: string (required - natural language search), types?: string|array (optional - filter by types: task/event/reminder/person/place/document/memory/project/thing/organization/history), limit?: number (default 10), search_type?: 'hybrid'|'openai_dense'|'bge_m3_dense'|'bge_m3_sparse' }"
     },
     {
       "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/search", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
@@ -17,7 +17,7 @@
     {
       "parameters": { "httpMethod": "POST", "path": "entity/get", "responseMode": "responseNode", "options": {} },
       "id": "wh-entity-get", "name": "entity/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "entity-get",
-      "notes": "Get any entity by ID (type detected from prefix). Body: { id: string (required - e.g. 'tsk_abc123', 'org_xyz789', 'thg_def456') }. Valid prefixes: tsk (task), evt (event), rem (reminder), per (person), plc (place), doc (document), mem (memory), prj (project), thg (thing), org (organization)"
+      "notes": "Get any entity by ID (type detected from prefix). Body: { id: string (required - e.g. 'tsk_abc123', 'org_xyz789', 'hst_def456') }. Valid prefixes: tsk (task), evt (event), rem (reminder), per (person), plc (place), doc (document), mem (memory), prj (project), thg (thing), org (organization), hst (history)"
     },
     {
       "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/entities/{{ $json.body.id }}", "options": {} },
@@ -30,7 +30,7 @@
     {
       "parameters": { "httpMethod": "POST", "path": "entity/delete", "responseMode": "responseNode", "options": {} },
       "id": "wh-entity-delete", "name": "entity/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "entity-delete",
-      "notes": "Delete one or multiple entities by ID. Type is auto-detected from ID prefix. BODY OPTIONS: Option 1 (single): { \"id\": \"tsk_abc123\" }. Option 2 (multiple): { \"ids\": [\"tsk_abc123\", \"org_xyz789\", \"thg_def456\"] }. VALID PREFIXES: tsk=task, evt=event, rem=reminder, per=person, plc=place, doc=document, mem=memory, prj=project, thg=thing, org=organization. RESPONSE: { success: boolean, deleted: string[], errors: [] }"
+      "notes": "Delete one or multiple entities by ID. Type is auto-detected from ID prefix. BODY OPTIONS: Option 1 (single): { \"id\": \"tsk_abc123\" }. Option 2 (multiple): { \"ids\": [\"tsk_abc123\", \"org_xyz789\", \"hst_def456\"] }. VALID PREFIXES: tsk=task, evt=event, rem=reminder, per=person, plc=place, doc=document, mem=memory, prj=project, thg=thing, org=organization, hst=history. RESPONSE: { success: boolean, deleted: string[], errors: [] }"
     },
     {
       "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/entities/delete", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
