@@ -120,10 +120,19 @@ export interface Organization extends BaseEntity {
   notes?: string;
 }
 
+// Fact extracted from conversation
+export interface Fact {
+  certainty: 'certain' | 'probable' | 'uncertain';
+  text: string; // The extracted fact
+  evidence: string; // Original text that supports this fact
+}
+
 // History - conversation summaries
 export interface History extends BaseEntity {
   summary: string; // Main summary of the conversation
+  session_id: string; // Session identifier
   date?: string; // Date of the conversation (ISO date)
+  facts?: Fact[]; // Array of extracted facts from the conversation
 }
 
 // Entity type enum for references

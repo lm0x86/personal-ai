@@ -4,10 +4,10 @@
     {
       "parameters": { "httpMethod": "POST", "path": "history/list", "responseMode": "responseNode", "options": {} },
       "id": "wh-history-list", "name": "history/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "history-list",
-      "notes": "List and search conversation history. Body: { q?: string (search query), limit?: number (default 10), date?: string (filter by date) }"
+      "notes": "List and search conversation history. Body: { q?: string (search query), limit?: number (default 10), session_id?: string (filter by session), date?: string (filter by date) }"
     },
     {
-      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/history?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.date ? '&date=' + $json.body.date : '' }}", "options": {} },
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/history?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.session_id ? '&session_id=' + $json.body.session_id : '' }}{{ $json.body.date ? '&date=' + $json.body.date : '' }}", "options": {} },
       "id": "http-history-list", "name": "HTTP history/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
     },
     {
@@ -30,7 +30,7 @@
     {
       "parameters": { "httpMethod": "POST", "path": "history/create", "responseMode": "responseNode", "options": {} },
       "id": "wh-history-create", "name": "history/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "history-create",
-      "notes": "Create a new history entry (conversation summary). Body: { title: string (required - short title), summary: string (required - conversation summary), date?: string (ISO date, defaults to today), description?: string (optional full details) }"
+      "notes": "Create a new history entry (conversation summary). Body: { title: string (required - short title), summary: string (required - conversation summary), session_id: string (required - session identifier), date?: string (ISO date), facts?: array of { certainty: 'certain'|'probable'|'uncertain', text: string (the fact), evidence: string (original text) } }"
     },
     {
       "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/history", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
