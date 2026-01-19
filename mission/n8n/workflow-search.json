@@ -1,10 +1,10 @@
 {
-  "name": "Assistant - Search",
+  "name": "Assistant - Search & Utilities",
   "nodes": [
     {
       "parameters": { "httpMethod": "POST", "path": "search", "responseMode": "responseNode", "options": {} },
       "id": "wh-search", "name": "search", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "search",
-      "notes": "Unified search across all entity types. Body: { query: string (required - natural language search), types?: array (optional - filter by types: task/event/reminder/person/place/document/memory/project), limit?: number (default 10), search_type?: 'hybrid'|'openai_dense'|'bge_m3_dense'|'bge_m3_sparse' }"
+      "notes": "Unified search across all entity types. Body: { query: string (required - natural language search), types?: string|array (optional - filter by types: task/event/reminder/person/place/document/memory/project/thing/organization), limit?: number (default 10), search_type?: 'hybrid'|'openai_dense'|'bge_m3_dense'|'bge_m3_sparse' }"
     },
     {
       "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/search", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
@@ -15,29 +15,58 @@
       "id": "res-search", "name": "Respond search", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
     },
     {
+      "parameters": { "httpMethod": "POST", "path": "entity/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-entity-get", "name": "entity/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "entity-get",
+      "notes": "Get any entity by ID (type detected from prefix). Body: { id: string (required - e.g. 'tsk_abc123', 'org_xyz789', 'thg_def456') }. Valid prefixes: tsk (task), evt (event), rem (reminder), per (person), plc (place), doc (document), mem (memory), prj (project), thg (thing), org (organization)"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/entities/{{ $json.body.id }}", "options": {} },
+      "id": "http-entity-get", "name": "HTTP entity/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-entity-get", "name": "Respond entity/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "entity/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-entity-delete", "name": "entity/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "entity-delete",
+      "notes": "Delete one or multiple entities by ID. Type is auto-detected from ID prefix. BODY OPTIONS: Option 1 (single): { \"id\": \"tsk_abc123\" }. Option 2 (multiple): { \"ids\": [\"tsk_abc123\", \"org_xyz789\", \"thg_def456\"] }. VALID PREFIXES: tsk=task, evt=event, rem=reminder, per=person, plc=place, doc=document, mem=memory, prj=project, thg=thing, org=organization. RESPONSE: { success: boolean, deleted: string[], errors: [] }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/entities/delete", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-entity-delete", "name": "HTTP entity/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-entity-delete", "name": "Respond entity/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
       "parameters": { "httpMethod": "POST", "path": "health", "responseMode": "responseNode", "options": {} },
-      "id": "wh-health", "name": "health", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "health",
+      "id": "wh-health", "name": "health", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "health",
       "notes": "Health check endpoint. Body: {} (empty - no parameters required)"
     },
     {
       "parameters": { "method": "GET", "url": "https://personal.optdevtech.com/health", "options": {} },
-      "id": "http-health", "name": "HTTP health", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+      "id": "http-health", "name": "HTTP health", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
     },
     {
       "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
-      "id": "res-health", "name": "Respond health", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+      "id": "res-health", "name": "Respond health", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
     }
   ],
   "connections": {
     "search": { "main": [[{ "node": "HTTP search", "type": "main", "index": 0 }]] },
     "HTTP search": { "main": [[{ "node": "Respond search", "type": "main", "index": 0 }]] },
+    "entity/get": { "main": [[{ "node": "HTTP entity/get", "type": "main", "index": 0 }]] },
+    "HTTP entity/get": { "main": [[{ "node": "Respond entity/get", "type": "main", "index": 0 }]] },
+    "entity/delete": { "main": [[{ "node": "HTTP entity/delete", "type": "main", "index": 0 }]] },
+    "HTTP entity/delete": { "main": [[{ "node": "Respond entity/delete", "type": "main", "index": 0 }]] },
     "health": { "main": [[{ "node": "HTTP health", "type": "main", "index": 0 }]] },
     "HTTP health": { "main": [[{ "node": "Respond health", "type": "main", "index": 0 }]] }
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "1",
-  "meta": { "instanceId": "assistant-search" },
+  "versionId": "2",
+  "meta": { "instanceId": "assistant-utilities" },
   "tags": []
 }
-

@@ -1,5 +1,5 @@
 {
-  "name": "Assistant - Events",
+  "name": "Assistant - Events (with Google Calendar)",
   "nodes": [
     {
       "parameters": { "httpMethod": "POST", "path": "events/list", "responseMode": "responseNode", "options": {} },
@@ -14,6 +14,7 @@
       "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
       "id": "res-events-list", "name": "Respond events/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
     },
+
     {
       "parameters": { "httpMethod": "POST", "path": "events/get", "responseMode": "responseNode", "options": {} },
       "id": "wh-events-get", "name": "events/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "events-get",
@@ -27,77 +28,169 @@
       "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
       "id": "res-events-get", "name": "Respond events/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
     },
+
     {
       "parameters": { "httpMethod": "POST", "path": "events/create", "responseMode": "responseNode", "options": {} },
       "id": "wh-events-create", "name": "events/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "events-create",
-      "notes": "Create a new event. Body: { title: string (required), start_time: string (required, ISO datetime), description?: string, end_time?: string, all_day?: boolean, person_id?: string, place_id?: string, project_id?: string, recurring?: 'daily'|'weekly'|'monthly'|'yearly' }"
+      "notes": "Create a new event (also syncs to Google Calendar). Body: { title: string (required), start_time: string (required, ISO datetime), description?: string, end_time?: string, all_day?: boolean, location?: string, person_id?: string, place_id?: string, project_id?: string, recurring?: 'daily'|'weekly'|'monthly'|'yearly' }"
     },
     {
       "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/events", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
       "id": "http-events-create", "name": "HTTP events/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
     },
     {
-      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
-      "id": "res-events-create", "name": "Respond events/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendar": { "__rl": true, "mode": "list", "value": "primary" },
+        "title": "={{ $json.title }}",
+        "start": "={{ $json.start_time }}",
+        "end": "={{ $json.end_time || $json.start_time }}",
+        "additionalFields": {
+          "description": "={{ $json.description || '' }}",
+          "location": "={{ $json.location || '' }}"
+        }
+      },
+      "id": "gcal-events-create", "name": "GCal Create", "type": "n8n-nodes-base.googleCalendar", "typeVersion": 1.1, "position": [440, 400],
+      "credentials": { "googleCalendarOAuth2Api": { "id": "GOOGLE_CALENDAR_CREDENTIAL_ID", "name": "Google Calendar" } }
     },
     {
+      "parameters": { 
+        "method": "PATCH", 
+        "url": "=https://personal.optdevtech.com/api/events/{{ $('HTTP events/create').item.json.id }}", 
+        "sendBody": true, 
+        "specifyBody": "json", 
+        "jsonBody": "={{ JSON.stringify({ google_calendar_id: $json.id }) }}", 
+        "options": {} 
+      },
+      "id": "http-events-update-gcal-id", "name": "Save GCal ID", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [660, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { ...$('HTTP events/create').item.json, google_calendar_id: $('GCal Create').item.json.id } }}", "options": {} },
+      "id": "res-events-create", "name": "Respond events/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [880, 400]
+    },
+
+    {
       "parameters": { "httpMethod": "POST", "path": "events/update", "responseMode": "responseNode", "options": {} },
-      "id": "wh-events-update", "name": "events/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "events-update",
-      "notes": "Update an event. Body: { id: string (required), title: string (required), start_time: string (required), end_time?: string, description?: string }"
+      "id": "wh-events-update", "name": "events/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 650], "webhookId": "events-update",
+      "notes": "Update an event (also syncs to Google Calendar). Body: { id: string (required), title: string (required), start_time: string (required), end_time?: string, description?: string, location?: string }"
     },
     {
       "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
-      "id": "http-events-update", "name": "HTTP events/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+      "id": "http-events-update", "name": "HTTP events/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 650]
     },
     {
-      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
-      "id": "res-events-update", "name": "Respond events/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+      "parameters": {
+        "resource": "event",
+        "operation": "update",
+        "calendar": { "__rl": true, "mode": "list", "value": "primary" },
+        "eventId": "={{ $json.google_calendar_id }}",
+        "updateFields": {
+          "title": "={{ $json.title }}",
+          "start": "={{ $json.start_time }}",
+          "end": "={{ $json.end_time || $json.start_time }}",
+          "description": "={{ $json.description || '' }}",
+          "location": "={{ $json.location || '' }}"
+        }
+      },
+      "id": "gcal-events-update", "name": "GCal Update", "type": "n8n-nodes-base.googleCalendar", "typeVersion": 1.1, "position": [440, 650],
+      "credentials": { "googleCalendarOAuth2Api": { "id": "GOOGLE_CALENDAR_CREDENTIAL_ID", "name": "Google Calendar" } },
+      "onError": "continueRegularOutput"
     },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $('HTTP events/update').item.json }}", "options": {} },
+      "id": "res-events-update", "name": "Respond events/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [660, 650]
+    },
+
     {
       "parameters": { "httpMethod": "POST", "path": "events/patch", "responseMode": "responseNode", "options": {} },
-      "id": "wh-events-patch", "name": "events/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "events-patch",
-      "notes": "Partially update an event. Body: { id: string (required), title?: string, start_time?: string, end_time?: string }"
+      "id": "wh-events-patch", "name": "events/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 900], "webhookId": "events-patch",
+      "notes": "Partially update an event (also syncs to Google Calendar). Body: { id: string (required), title?: string, start_time?: string, end_time?: string, location?: string }"
     },
     {
       "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
-      "id": "http-events-patch", "name": "HTTP events/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+      "id": "http-events-patch", "name": "HTTP events/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 900]
     },
     {
-      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
-      "id": "res-events-patch", "name": "Respond events/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+      "parameters": {
+        "resource": "event",
+        "operation": "update",
+        "calendar": { "__rl": true, "mode": "list", "value": "primary" },
+        "eventId": "={{ $json.google_calendar_id }}",
+        "updateFields": {
+          "title": "={{ $json.title }}",
+          "start": "={{ $json.start_time }}",
+          "end": "={{ $json.end_time || $json.start_time }}",
+          "description": "={{ $json.description || '' }}",
+          "location": "={{ $json.location || '' }}"
+        }
+      },
+      "id": "gcal-events-patch", "name": "GCal Patch", "type": "n8n-nodes-base.googleCalendar", "typeVersion": 1.1, "position": [440, 900],
+      "credentials": { "googleCalendarOAuth2Api": { "id": "GOOGLE_CALENDAR_CREDENTIAL_ID", "name": "Google Calendar" } },
+      "onError": "continueRegularOutput"
     },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $('HTTP events/patch').item.json }}", "options": {} },
+      "id": "res-events-patch", "name": "Respond events/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [660, 900]
+    },
+
     {
       "parameters": { "httpMethod": "POST", "path": "events/delete", "responseMode": "responseNode", "options": {} },
-      "id": "wh-events-delete", "name": "events/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "events-delete",
-      "notes": "Delete an event. Body: { id: string (required) }"
+      "id": "wh-events-delete", "name": "events/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1150], "webhookId": "events-delete",
+      "notes": "Delete an event (also removes from Google Calendar). Body: { id: string (required) }"
     },
     {
-      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "options": {} },
-      "id": "http-events-delete", "name": "HTTP events/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/events/{{ $json.body.id }}", "options": {} },
+      "id": "http-events-get-for-delete", "name": "Get Event for Delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1150]
     },
     {
-      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true } }}", "options": {} },
-      "id": "res-events-delete", "name": "Respond events/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+      "parameters": {
+        "resource": "event",
+        "operation": "delete",
+        "calendar": { "__rl": true, "mode": "list", "value": "primary" },
+        "eventId": "={{ $json.google_calendar_id }}"
+      },
+      "id": "gcal-events-delete", "name": "GCal Delete", "type": "n8n-nodes-base.googleCalendar", "typeVersion": 1.1, "position": [440, 1150],
+      "credentials": { "googleCalendarOAuth2Api": { "id": "GOOGLE_CALENDAR_CREDENTIAL_ID", "name": "Google Calendar" } },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/events/{{ $('events/delete').item.json.body.id }}", "options": {} },
+      "id": "http-events-delete", "name": "HTTP events/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [660, 1150]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true, \"deleted\": $('events/delete').item.json.body.id } }}", "options": {} },
+      "id": "res-events-delete", "name": "Respond events/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [880, 1150]
     }
   ],
   "connections": {
     "events/list": { "main": [[{ "node": "HTTP events/list", "type": "main", "index": 0 }]] },
     "HTTP events/list": { "main": [[{ "node": "Respond events/list", "type": "main", "index": 0 }]] },
+    
     "events/get": { "main": [[{ "node": "HTTP events/get", "type": "main", "index": 0 }]] },
     "HTTP events/get": { "main": [[{ "node": "Respond events/get", "type": "main", "index": 0 }]] },
+    
     "events/create": { "main": [[{ "node": "HTTP events/create", "type": "main", "index": 0 }]] },
-    "HTTP events/create": { "main": [[{ "node": "Respond events/create", "type": "main", "index": 0 }]] },
+    "HTTP events/create": { "main": [[{ "node": "GCal Create", "type": "main", "index": 0 }]] },
+    "GCal Create": { "main": [[{ "node": "Save GCal ID", "type": "main", "index": 0 }]] },
+    "Save GCal ID": { "main": [[{ "node": "Respond events/create", "type": "main", "index": 0 }]] },
+    
     "events/update": { "main": [[{ "node": "HTTP events/update", "type": "main", "index": 0 }]] },
-    "HTTP events/update": { "main": [[{ "node": "Respond events/update", "type": "main", "index": 0 }]] },
+    "HTTP events/update": { "main": [[{ "node": "GCal Update", "type": "main", "index": 0 }]] },
+    "GCal Update": { "main": [[{ "node": "Respond events/update", "type": "main", "index": 0 }]] },
+    
     "events/patch": { "main": [[{ "node": "HTTP events/patch", "type": "main", "index": 0 }]] },
-    "HTTP events/patch": { "main": [[{ "node": "Respond events/patch", "type": "main", "index": 0 }]] },
-    "events/delete": { "main": [[{ "node": "HTTP events/delete", "type": "main", "index": 0 }]] },
+    "HTTP events/patch": { "main": [[{ "node": "GCal Patch", "type": "main", "index": 0 }]] },
+    "GCal Patch": { "main": [[{ "node": "Respond events/patch", "type": "main", "index": 0 }]] },
+    
+    "events/delete": { "main": [[{ "node": "Get Event for Delete", "type": "main", "index": 0 }]] },
+    "Get Event for Delete": { "main": [[{ "node": "GCal Delete", "type": "main", "index": 0 }]] },
+    "GCal Delete": { "main": [[{ "node": "HTTP events/delete", "type": "main", "index": 0 }]] },
     "HTTP events/delete": { "main": [[{ "node": "Respond events/delete", "type": "main", "index": 0 }]] }
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "1",
-  "meta": { "instanceId": "assistant-events" },
+  "versionId": "2",
+  "meta": { "instanceId": "assistant-events-gcal" },
   "tags": []
 }
-

@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Organizations",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-list", "name": "organizations/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "organizations-list",
+      "notes": "List and search organizations. Body: { q?: string (search query), limit?: number (default 10), type?: string (company/ngo/government/bank/supplier/client), industry?: string }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/organizations?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.type ? '&type=' + $json.body.type : '' }}{{ $json.body.industry ? '&industry=' + $json.body.industry : '' }}", "options": {} },
+      "id": "http-orgs-list", "name": "HTTP organizations/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-orgs-list", "name": "Respond organizations/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-get", "name": "organizations/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "organizations-get",
+      "notes": "Get an organization by ID. Body: { id: string (required, e.g. 'org_abc123') }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/organizations/{{ $json.body.id }}", "options": {} },
+      "id": "http-orgs-get", "name": "HTTP organizations/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-orgs-get", "name": "Respond organizations/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-create", "name": "organizations/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "organizations-create",
+      "notes": "Create a new organization. Body: { title: string (required - organization name), description?: string, type?: string (company/ngo/government/bank/supplier/client), industry?: string (technology/finance/healthcare/retail), vat_number?: string, registration_number?: string, phone?: string, email?: string, website?: string, address?: string, place_id?: string, contact_person_id?: string (link to Person), employees?: number, founded?: string (year/date), notes?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/organizations", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-orgs-create", "name": "HTTP organizations/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-orgs-create", "name": "Respond organizations/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-update", "name": "organizations/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "organizations-update",
+      "notes": "Update an organization (full replace). Body: { id: string (required), title: string (required), type?: string, industry?: string, phone?: string, email?: string, website?: string }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/organizations/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-orgs-update", "name": "HTTP organizations/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-orgs-update", "name": "Respond organizations/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-patch", "name": "organizations/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "organizations-patch",
+      "notes": "Partially update an organization. Body: { id: string (required), title?: string, type?: string, phone?: string, email?: string, contact_person_id?: string, notes?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/organizations/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-orgs-patch", "name": "HTTP organizations/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-orgs-patch", "name": "Respond organizations/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "organizations/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-orgs-delete", "name": "organizations/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "organizations-delete",
+      "notes": "Delete an organization. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/organizations/{{ $json.body.id }}", "options": {} },
+      "id": "http-orgs-delete", "name": "HTTP organizations/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}", "options": {} },
+      "id": "res-orgs-delete", "name": "Respond organizations/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "organizations/list": { "main": [[{ "node": "HTTP organizations/list", "type": "main", "index": 0 }]] },
+    "HTTP organizations/list": { "main": [[{ "node": "Respond organizations/list", "type": "main", "index": 0 }]] },
+    "organizations/get": { "main": [[{ "node": "HTTP organizations/get", "type": "main", "index": 0 }]] },
+    "HTTP organizations/get": { "main": [[{ "node": "Respond organizations/get", "type": "main", "index": 0 }]] },
+    "organizations/create": { "main": [[{ "node": "HTTP organizations/create", "type": "main", "index": 0 }]] },
+    "HTTP organizations/create": { "main": [[{ "node": "Respond organizations/create", "type": "main", "index": 0 }]] },
+    "organizations/update": { "main": [[{ "node": "HTTP organizations/update", "type": "main", "index": 0 }]] },
+    "HTTP organizations/update": { "main": [[{ "node": "Respond organizations/update", "type": "main", "index": 0 }]] },
+    "organizations/patch": { "main": [[{ "node": "HTTP organizations/patch", "type": "main", "index": 0 }]] },
+    "HTTP organizations/patch": { "main": [[{ "node": "Respond organizations/patch", "type": "main", "index": 0 }]] },
+    "organizations/delete": { "main": [[{ "node": "HTTP organizations/delete", "type": "main", "index": 0 }]] },
+    "HTTP organizations/delete": { "main": [[{ "node": "Respond organizations/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-organizations" },
+  "tags": []
+}
+

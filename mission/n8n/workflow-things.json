@@ -1,0 +1,103 @@
+{
+  "name": "Assistant - Things",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/list", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-list", "name": "things/list", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 0], "webhookId": "things-list",
+      "notes": "List and search things/objects. Body: { q?: string (search query), limit?: number (default 10), category?: string (electronics/vehicle/jewelry/furniture/tool), condition?: 'new'|'excellent'|'good'|'fair'|'poor' }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/things?q={{ $json.body.q || '' }}&limit={{ $json.body.limit || 10 }}{{ $json.body.category ? '&category=' + $json.body.category : '' }}{{ $json.body.condition ? '&condition=' + $json.body.condition : '' }}", "options": {} },
+      "id": "http-things-list", "name": "HTTP things/list", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 0]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-things-list", "name": "Respond things/list", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 0]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/get", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-get", "name": "things/get", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 200], "webhookId": "things-get",
+      "notes": "Get a thing by ID. Body: { id: string (required, e.g. 'thg_abc123') }"
+    },
+    {
+      "parameters": { "method": "GET", "url": "=https://personal.optdevtech.com/api/things/{{ $json.body.id }}", "options": {} },
+      "id": "http-things-get", "name": "HTTP things/get", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 200]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-things-get", "name": "Respond things/get", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 200]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/create", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-create", "name": "things/create", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 400], "webhookId": "things-create",
+      "notes": "Create a new thing/object. Body: { title: string (required - item name), description?: string, category?: string (electronics/vehicle/jewelry/furniture/tool), brand?: string, model?: string, serial_number?: string, purchase_date?: string (ISO date), purchase_price?: number, current_value?: number, warranty_expires?: string (ISO date), condition?: 'new'|'excellent'|'good'|'fair'|'poor', location?: string (where stored), place_id?: string, person_id?: string (owner), notes?: string }"
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://personal.optdevtech.com/api/things", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-things-create", "name": "HTTP things/create", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 400]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-things-create", "name": "Respond things/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-update", "name": "things/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "things-update",
+      "notes": "Update a thing (full replace). Body: { id: string (required), title: string (required), category?: string, brand?: string, condition?: string, current_value?: number }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/things/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-things-update", "name": "HTTP things/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-things-update", "name": "Respond things/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-patch", "name": "things/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "things-patch",
+      "notes": "Partially update a thing. Body: { id: string (required), title?: string, condition?: string, current_value?: number, location?: string, notes?: string }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/things/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-things-patch", "name": "HTTP things/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-things-patch", "name": "Respond things/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "things/delete", "responseMode": "responseNode", "options": {} },
+      "id": "wh-things-delete", "name": "things/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "things-delete",
+      "notes": "Delete a thing. Body: { id: string (required) }"
+    },
+    {
+      "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/things/{{ $json.body.id }}", "options": {} },
+      "id": "http-things-delete", "name": "HTTP things/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}", "options": {} },
+      "id": "res-things-delete", "name": "Respond things/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
+    }
+  ],
+  "connections": {
+    "things/list": { "main": [[{ "node": "HTTP things/list", "type": "main", "index": 0 }]] },
+    "HTTP things/list": { "main": [[{ "node": "Respond things/list", "type": "main", "index": 0 }]] },
+    "things/get": { "main": [[{ "node": "HTTP things/get", "type": "main", "index": 0 }]] },
+    "HTTP things/get": { "main": [[{ "node": "Respond things/get", "type": "main", "index": 0 }]] },
+    "things/create": { "main": [[{ "node": "HTTP things/create", "type": "main", "index": 0 }]] },
+    "HTTP things/create": { "main": [[{ "node": "Respond things/create", "type": "main", "index": 0 }]] },
+    "things/update": { "main": [[{ "node": "HTTP things/update", "type": "main", "index": 0 }]] },
+    "HTTP things/update": { "main": [[{ "node": "Respond things/update", "type": "main", "index": 0 }]] },
+    "things/patch": { "main": [[{ "node": "HTTP things/patch", "type": "main", "index": 0 }]] },
+    "HTTP things/patch": { "main": [[{ "node": "Respond things/patch", "type": "main", "index": 0 }]] },
+    "things/delete": { "main": [[{ "node": "HTTP things/delete", "type": "main", "index": 0 }]] },
+    "HTTP things/delete": { "main": [[{ "node": "Respond things/delete", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "1",
+  "meta": { "instanceId": "assistant-things" },
+  "tags": []
+}
+

@@ -15,6 +15,8 @@ const PREFIX_TO_TYPE: Record<string, EntityType> = {
   [ID_PREFIX.document]: 'document',
   [ID_PREFIX.memory]: 'memory',
   [ID_PREFIX.project]: 'project',
+  [ID_PREFIX.thing]: 'thing',
+  [ID_PREFIX.organization]: 'organization',
 };
 
 // Extract entity type from ID prefix

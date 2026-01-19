@@ -27,6 +27,8 @@ export interface Event extends BaseEntity {
   place_id?: string;
   project_id?: string;
   recurring?: string; // e.g., "daily", "weekly", "monthly"
+  location?: string; // Physical location/address for the event
+  google_calendar_id?: string; // Google Calendar event ID for sync
 }
 
 // Reminder - time-triggered notification
@@ -84,6 +86,40 @@ export interface Project extends BaseEntity {
   goal?: string;
 }
 
+// Thing - valuable objects, possessions, assets
+export interface Thing extends BaseEntity {
+  category?: string; // e.g., "electronics", "vehicle", "jewelry", "furniture", "tool"
+  brand?: string;
+  model?: string;
+  serial_number?: string;
+  purchase_date?: string;
+  purchase_price?: number;
+  current_value?: number;
+  warranty_expires?: string;
+  condition?: 'new' | 'excellent' | 'good' | 'fair' | 'poor';
+  location?: string; // Where it's stored/kept
+  place_id?: string; // Link to a Place
+  person_id?: string; // Owner or responsible person
+  notes?: string;
+}
+
+// Organization - companies, businesses, institutions
+export interface Organization extends BaseEntity {
+  type?: string; // e.g., "company", "ngo", "government", "bank", "supplier", "client"
+  industry?: string; // e.g., "technology", "finance", "healthcare", "retail"
+  vat_number?: string;
+  registration_number?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  place_id?: string; // Link to Place (headquarters/office)
+  contact_person_id?: string; // Link to Person (main contact)
+  employees?: number;
+  founded?: string; // Year or date
+  notes?: string;
+}
+
 // Entity type enum for references
 export type EntityType = 
   | 'task' 
@@ -93,10 +129,12 @@ export type EntityType =
   | 'place' 
   | 'document' 
   | 'memory' 
-  | 'project';
+  | 'project'
+  | 'thing'
+  | 'organization';
 
 // Union type for any entity
-export type Entity = Task | Event | Reminder | Person | Place | Document | Memory | Project;
+export type Entity = Task | Event | Reminder | Person | Place | Document | Memory | Project | Thing | Organization;
 
 // Create input types (id is auto-generated)
 export type CreateTask = Omit<Task, 'id'> & { id?: string };
@@ -107,4 +145,6 @@ export type CreatePlace = Omit<Place, 'id'> & { id?: string };
 export type CreateDocument = Omit<Document, 'id'> & { id?: string };
 export type CreateMemory = Omit<Memory, 'id'> & { id?: string };
 export type CreateProject = Omit<Project, 'id'> & { id?: string };
+export type CreateThing = Omit<Thing, 'id'> & { id?: string };
+export type CreateOrganization = Omit<Organization, 'id'> & { id?: string };
 
