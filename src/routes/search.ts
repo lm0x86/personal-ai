@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { vectorStore } from '../services/vectorStore.js';
-import { EntityType } from '../types/entities.js';
+import { EntityType, BaseEntity } from '../types/entities.js';
 
 export const searchRouter = Router();
 
@@ -14,6 +14,12 @@ const ALL_ENTITY_TYPES: EntityType[] = [
   'memory',
   'project',
 ];
+
+// Extended type that includes search score
+interface SearchResultItem extends BaseEntity {
+  _type: EntityType;
+  _score?: number;
+}
 
 // POST /search - Unified search across all or specific entity types
 searchRouter.post('/', async (req: Request, res: Response) => {
@@ -45,12 +51,12 @@ searchRouter.post('/', async (req: Request, res: Response) => {
     });
 
     // Flatten results with type information
-    const flatResults = entityTypes.flatMap((entityType) => {
+    const flatResults: SearchResultItem[] = entityTypes.flatMap((entityType) => {
       const typeResults = results[entityType]?.results || [];
       return typeResults.map((item) => ({
         ...item,
         _type: entityType,
-      }));
+      } as SearchResultItem));
     });
 
     // Sort by relevance score if available, otherwise by updated_at
@@ -97,12 +103,12 @@ searchRouter.get('/', async (req: Request, res: Response) => {
     });
 
     // Flatten results
-    const flatResults = entityTypes.flatMap((entityType) => {
+    const flatResults: SearchResultItem[] = entityTypes.flatMap((entityType) => {
       const typeResults = results[entityType]?.results || [];
       return typeResults.map((item) => ({
         ...item,
         _type: entityType,
-      }));
+      } as SearchResultItem));
     });
 
     res.json({
@@ -116,4 +122,3 @@ searchRouter.get('/', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Search failed' });
   }
 });
-

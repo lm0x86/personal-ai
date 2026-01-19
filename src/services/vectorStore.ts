@@ -13,6 +13,16 @@ interface SearchResult<T> {
   total: number;
 }
 
+interface ApiSearchResponse {
+  results?: unknown[];
+  total?: number;
+}
+
+interface ApiStatsResponse {
+  total_products?: number;
+  has_data?: boolean;
+}
+
 class VectorStoreService {
   private baseUrl: string;
   private apiKey: string;
@@ -28,8 +38,8 @@ class VectorStoreService {
     return `${this.indexPrefix}${INDEX_NAMES[entityType]}`;
   }
 
-  private getHeaders(): HeadersInit {
-    const headers: HeadersInit = {
+  private getHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
     if (this.apiKey) {
@@ -54,11 +64,11 @@ class VectorStoreService {
     const now = new Date().toISOString();
     
     const payload = {
+      ...entity,
       index,
       id: entity.id,
       title: entity.title,
       description: entity.description || '',
-      ...entity,
       updated_at: now,
       created_at: entity.created_at || now,
     };
@@ -100,8 +110,8 @@ class VectorStoreService {
       throw new Error(`Failed to get ${entityType}: ${error}`);
     }
 
-    const data = await response.json();
-    return data as T;
+    const data = await response.json() as T;
+    return data;
   }
 
   // Get multiple entities by IDs
@@ -127,7 +137,7 @@ class VectorStoreService {
       throw new Error(`Failed to get ${entityType}s: ${error}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as T | T[];
     return Array.isArray(data) ? data : [data];
   }
 
@@ -171,10 +181,11 @@ class VectorStoreService {
       throw new Error(`Failed to search ${entityType}: ${error}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as ApiSearchResponse;
+    const results = (data.results || data || []) as T[];
     return {
-      results: data.results || data || [],
-      total: data.total || (data.results || data || []).length,
+      results,
+      total: data.total || results.length,
     };
   }
 
@@ -209,7 +220,7 @@ class VectorStoreService {
       return { total: 0, hasData: false };
     }
 
-    const data = await response.json();
+    const data = await response.json() as ApiStatsResponse;
     return {
       total: data.total_products || 0,
       hasData: data.has_data || false,
@@ -219,4 +230,3 @@ class VectorStoreService {
 
 // Export singleton instance
 export const vectorStore = new VectorStoreService();
-
