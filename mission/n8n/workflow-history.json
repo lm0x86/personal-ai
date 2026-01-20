@@ -41,17 +41,43 @@
       "id": "res-history-create", "name": "Respond history/create", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 400]
     },
     {
+      "parameters": { "httpMethod": "POST", "path": "history/update", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-update", "name": "history/update", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "history-update",
+      "notes": "Update a history entry (full replace). Body: { id: string (required), title: string (required), summary: string (required), session_id: string (required), date?: string, facts?: array }"
+    },
+    {
+      "parameters": { "method": "PUT", "url": "=https://personal.optdevtech.com/api/history/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-history-update", "name": "HTTP history/update", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-history-update", "name": "Respond history/update", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "history/patch", "responseMode": "responseNode", "options": {} },
+      "id": "wh-history-patch", "name": "history/patch", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 800], "webhookId": "history-patch",
+      "notes": "Partially update a history entry. Body: { id: string (required), title?: string, summary?: string, date?: string, facts?: array (adds to existing facts) }"
+    },
+    {
+      "parameters": { "method": "PATCH", "url": "=https://personal.optdevtech.com/api/history/{{ $json.body.id }}", "sendBody": true, "specifyBody": "json", "jsonBody": "={{ $json.body }}", "options": {} },
+      "id": "http-history-patch", "name": "HTTP history/patch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 800]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ $json }}", "options": {} },
+      "id": "res-history-patch", "name": "Respond history/patch", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 800]
+    },
+    {
       "parameters": { "httpMethod": "POST", "path": "history/delete", "responseMode": "responseNode", "options": {} },
-      "id": "wh-history-delete", "name": "history/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 600], "webhookId": "history-delete",
+      "id": "wh-history-delete", "name": "history/delete", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0, 1000], "webhookId": "history-delete",
       "notes": "Delete a history entry. Body: { id: string (required) }"
     },
     {
       "parameters": { "method": "DELETE", "url": "=https://personal.optdevtech.com/api/history/{{ $json.body.id }}", "options": {} },
-      "id": "http-history-delete", "name": "HTTP history/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 600]
+      "id": "http-history-delete", "name": "HTTP history/delete", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [220, 1000]
     },
     {
       "parameters": { "respondWith": "json", "responseBody": "={{ { \"success\": true, \"deleted\": $json.body.id } }}", "options": {} },
-      "id": "res-history-delete", "name": "Respond history/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 600]
+      "id": "res-history-delete", "name": "Respond history/delete", "type": "n8n-nodes-base.respondToWebhook", "typeVersion": 1.1, "position": [440, 1000]
     }
   ],
   "connections": {
@@ -61,13 +87,16 @@
     "HTTP history/get": { "main": [[{ "node": "Respond history/get", "type": "main", "index": 0 }]] },
     "history/create": { "main": [[{ "node": "HTTP history/create", "type": "main", "index": 0 }]] },
     "HTTP history/create": { "main": [[{ "node": "Respond history/create", "type": "main", "index": 0 }]] },
+    "history/update": { "main": [[{ "node": "HTTP history/update", "type": "main", "index": 0 }]] },
+    "HTTP history/update": { "main": [[{ "node": "Respond history/update", "type": "main", "index": 0 }]] },
+    "history/patch": { "main": [[{ "node": "HTTP history/patch", "type": "main", "index": 0 }]] },
+    "HTTP history/patch": { "main": [[{ "node": "Respond history/patch", "type": "main", "index": 0 }]] },
     "history/delete": { "main": [[{ "node": "HTTP history/delete", "type": "main", "index": 0 }]] },
     "HTTP history/delete": { "main": [[{ "node": "Respond history/delete", "type": "main", "index": 0 }]] }
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "1",
+  "versionId": "2",
   "meta": { "instanceId": "assistant-history" },
   "tags": []
 }
-

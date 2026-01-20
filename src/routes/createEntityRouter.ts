@@ -3,6 +3,23 @@ import { vectorStore } from '../services/vectorStore.js';
 import { BaseEntity, EntityType } from '../types/entities.js';
 import { generateId, IdPrefix } from '../utils/id.js';
 
+// Fields that should NEVER be stored in entities (API wrapper/system fields)
+const FORBIDDEN_FIELDS = [
+  'status', 'count', 'products', 'index', 'images_count', 
+  'search_type', 'total', 'results', 'query_all', 'images',
+  '_score', '_type', 'entity_type' // system fields
+];
+
+function cleanRequestBody(body: Record<string, unknown>): Record<string, unknown> {
+  const clean: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(body)) {
+    if (!FORBIDDEN_FIELDS.includes(key) && value !== '' && value !== undefined) {
+      clean[key] = value;
+    }
+  }
+  return clean;
+}
+
 interface RouterOptions {
   entityType: EntityType;
   idPrefix: IdPrefix;
@@ -82,10 +99,12 @@ export function createEntityRouter<T extends BaseEntity>(options: RouterOptions)
         }
       }
 
+      const cleanBody = cleanRequestBody(body);
+
       const entity: T = {
-        ...body,
+        ...cleanBody,
         id: body.id || generateId(idPrefix),
-      };
+      } as T;
 
       const created = await vectorStore.upsert<T>(entityType, entity);
       res.status(201).json(created);
@@ -105,9 +124,11 @@ export function createEntityRouter<T extends BaseEntity>(options: RouterOptions)
         return;
       }
 
+      const cleanBody = cleanRequestBody(req.body);
+
       const updated: T = {
         ...existing,
-        ...req.body,
+        ...cleanBody,
         id: req.params.id, // Ensure ID doesn't change
       };
 
@@ -129,9 +150,11 @@ export function createEntityRouter<T extends BaseEntity>(options: RouterOptions)
         return;
       }
 
+      const cleanBody = cleanRequestBody(req.body);
+
       const updated: T = {
         ...existing,
-        ...req.body,
+        ...cleanBody,
         id: req.params.id,
       };
 
